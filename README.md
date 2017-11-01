@@ -12,26 +12,12 @@ SYNOPSIS
 		./SiCF [ OPTION VALEUR ]...
 
 OPTION
+	fond
+		Couleur du fond	(noir 0 < fond < 255 blanc)
 
 	soliton
 		Déphasage entre les extrémitées / 2PI	( -99 < dephasage < 99 ),
 		nombre de solitons initiales
-
-	equation
-		Choix de l'équation	( 0 < equation < 5 )
-			1 : pendule, 2 : linéarisation, 3 : corde, 4 : dioptre
-
-	fond
-		Couleur du fond	(noir 0 < fond < 255 blanc)
-
-	mode
-		Mode attente ou non		( -1 : Wait, 1 : Poll )
-
-	pause
-		Temps de pause entre les affichages en ms	( 5 < pause < 555 )
-
-	duree
-		Nombre d'évolution du système entre les affichages.
 
 	dt
 		Discrétisation du temps	( 0.0 < dt < 0.003 )
@@ -41,6 +27,19 @@ OPTION
 
 	dissipation
 		Frottement visqueux initiale
+
+	equation
+		Choix de l'équation	( 0 < equation < 5 )
+			1 : pendule, 2 : linéarisation, 3 : corde, 4 : dioptre
+
+	pause
+		Temps de pause entre les affichages en ms	( 5 < pause < 555 )
+
+	duree
+		Nombre d'évolution du système entre les affichages.
+
+	mode
+		Mode attente ou non		( -1 : Wait, 1 : Poll )
 
 AUTEUR
 		Écrit par Stephan Runigo
@@ -61,13 +60,13 @@ Entrée : change le mode temporelle
 
 
 a, q : augmenter, diminuer le couplage
-z, s : augmenter, diminuer la gravitation
+z, s : augmenter, diminuer la masse
 
 e, d : diminuer, augmenter la dissipation
 r, f : retire, forme la dissipation
 v : forme l'extremité absorbante
 
-t, g : augmenter, diminuer la masse
+t, g : augmenter, diminuer la gravitation
 y, h : ajoute, enlève un déphasage de 2 pi
 
 w : conditions aux limites périodique
@@ -82,7 +81,7 @@ l : démarre le signal carrée
 p, m : augmenter, diminuer la fréquence
 
 F5 : affiche les énergies
-F8 : affiche les sommes des modules au carrés
+F6 : affiche les paramètres physiques
 
 flêche droite : allume, éteint le courant Josephson
 flêches haut, bas : augmente, diminue l'intensité
@@ -96,9 +95,9 @@ F4 : Dioptre
 
 LICENCE
 
-Copyright août 2017, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1.1  simulateur de chaîne de pendules
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 

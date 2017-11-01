@@ -1,7 +1,7 @@
 /*
-Copyright janvier 2017, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1.1  simulateur de corde vibrante et spectre
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -242,33 +242,29 @@ int controleurClavier(controleur * control)
 	{
 	switch ((*control).evenement.key.keysym.sym)
 		{
-
 	// Sortie
-
 		case SDLK_ESCAPE:
 			(*control).option.sortie = 1;break;
 
-    // Mode : attente d'un evenement / pas d'attente
-
+	// Mode : attente d'un evenement / pas d'attente
 		case SDLK_RETURN:
-			controleurChangeMode(control);break;
-		case SDLK_F12:
 			controleurChangeMode(control);break;
 
 	// Vitesse de la simulation
-
 		case SDLK_KP_PLUS:
 			controleurChangeVitesse(control, 1.1);break;
 		case SDLK_KP_MINUS:
-			controleurChangeVitesse(control, 0.9);break;
-		// Alternatives
+			controleurChangeVitesse(control, 0.91);break;
+		case SDLK_F9:
+			controleurChangeVitesse(control, 0.32);break;
 		case SDLK_F10:
-			controleurChangeVitesse(control, 0.29);break;
+			controleurChangeVitesse(control, 0.91);break;
 		case SDLK_F11:
+			controleurChangeVitesse(control, 1.1);break;
+		case SDLK_F12:
 			controleurChangeVitesse(control, 3.1);break;
 
 	// Conditions aux limites
-
 		case SDLK_y:
 			changeDephasage(&(*control).system, 2*PI);break;
 		case SDLK_h:
@@ -291,7 +287,6 @@ int controleurClavier(controleur * control)
 
 
 	// Dissipation
-
 		case SDLK_d:
 			changeDissipation(&(*control).system, 1.3);break;
 		case SDLK_e:
@@ -304,26 +299,28 @@ int controleurClavier(controleur * control)
 			changeFormeDissipation(&(*control).system, 2);break;
 
 	// Couplage
-
 		case SDLK_a:
 			changeCouplage(&(*control).system, 1.1);break;
 		case SDLK_q:
 			changeCouplage(&(*control).system, 0.9);break;
 
-	// Gravitation
-
+	// Masse
 		case SDLK_z:
-			changeGravitation(&(*control).system, 1.1);break;
+			changeMasse(&(*control).system, 1.1);break;
 		case SDLK_s:
-			changeGravitation(&(*control).system, 0.9);break;
+			changeMasse(&(*control).system, 0.91);break;
 
+	// Gravitation
+		case SDLK_t:
+			changeGravitation(&(*control).system, 1.1);break;
+		case SDLK_g:
+			changeGravitation(&(*control).system, 0.91);break;
 
 	// Moteur jonction Josephson
-
 		case SDLK_UP:
 			moteursChangeJosephson(&(*control).system.moteur,1.1);break;
 		case SDLK_DOWN:
-			moteursChangeJosephson(&(*control).system.moteur,0.9);break;
+			moteursChangeJosephson(&(*control).system.moteur,0.91);break;
 		case SDLK_LEFT:
 			moteursChangeJosephson(&(*control).system.moteur,-1.0);break;
 		case SDLK_RIGHT:
@@ -334,11 +331,11 @@ int controleurClavier(controleur * control)
 		case SDLK_p:
 			moteursChangeFrequence(&(*control).system.moteur,1.1);break;
 		case SDLK_m:
-			moteursChangeFrequence(&(*control).system.moteur,0.9);break;
+			moteursChangeFrequence(&(*control).system.moteur,0.91);break;
 		case SDLK_u:
 			moteursChangeAmplitude(&(*control).system.moteur,1.1);break;
 		case SDLK_j:
-			moteursChangeAmplitude(&(*control).system.moteur,0.9);break;
+			moteursChangeAmplitude(&(*control).system.moteur,0.91);break;
 		case SDLK_o:
 			moteursChangeGenerateur(&(*control).system.moteur, -1);break;
 		case SDLK_i:
@@ -350,29 +347,23 @@ int controleurClavier(controleur * control)
 	// Choix de l'equation
 
 		case SDLK_F1: // Pendules
-			(*control).system.equation = 1;break;
+			changeEquation(&(*control).system, 1);break;
 		case SDLK_F2: // Harmoniques
-			(*control).system.equation = 2;break;
+			changeEquation(&(*control).system, 2);break;
 		case SDLK_F3: // Corde
-			(*control).system.equation = 3;break;
+			changeEquation(&(*control).system, 3);break;
 		case SDLK_F4: // Corde asymétrique
-			(*control).system.equation = 4;break;
+			changeEquation(&(*control).system, 4);break;
 
 
 	// Choix de l'equation
 
 		case SDLK_F5: // Pendules
 			observablesAfficheEnergie(&(*control).system);break;
-	// Changement de la masse
-/*
-		case SDLK_u:
-			changeMasse(&(*control).system, 1.7);
-			break;
-		case SDLK_j:
-			changeMasse(&(*control).system, 0.6);
-			break;
 
-*/
+		case SDLK_F6: // Pendules
+			systemeAffiche(&(*control).system);break;
+
 		default:
 			;
 		}
@@ -604,8 +595,9 @@ int controleurSouris(controleur * control)
 		{
 		x=-0.01*(float)((*control).evenement.motion.xrel);
 		y=0.1*HAUTEUR*(float)((*control).evenement.motion.yrel);
-		fprintf(stderr, "controleurSouris yrel = %d , x = %f\n", (*control).evenement.motion.yrel, x);
-		fprintf(stderr, "controleurSouris xrel = %d , y = %f\n", (*control).evenement.motion.xrel, y);
+		//fprintf(stderr, "controleurSouris yrel = %d , x = %f\n", (*control).evenement.motion.yrel, x);
+		//fprintf(stderr, "controleurSouris xrel = %d , y = %f\n", (*control).evenement.motion.xrel, y);
+		(void)x;(void)y;
 		}
 	return (*control).option.sortie;
 	}

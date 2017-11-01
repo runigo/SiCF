@@ -1,7 +1,7 @@
 /*
-Copyright janvier 2017, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1.1  simulateur de corde vibrante et spectre
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -41,11 +41,40 @@ void systemeChangeLimite(systeme * system);
 void systemeFormeDioptre(systeme * system, float facteur);
 float systemeMoteur(systeme * system);
 
+// normalise le premier pendule
+void systemeJaugeZero(systeme * system);
 // normalise la moyenne du systeme à zéro
 void systemeJauge(systeme * system);
 double systemeMoyenne(systeme * system);
 
 
+
+/*----------------JAUGE ET NORMALISATION-------------------*/
+
+// normalise le premier pendule
+void systemeJaugeZero(systeme * system)
+	{
+	float position = (*system).pendul[0].nouveau;
+	float jauge;
+
+	//fprintf(stderr, "\nEntrée systemeJaugeZero, position = %f\n", position);
+	//fprintf(stderr, "\nEntrée systemeJaugeZero, position/DEUXPI = %f\n", position/DEUXPI);
+
+	jauge = -DEUXPI*(int)(position/DEUXPI);
+	if(jauge>PI || jauge<PI)
+		{
+		int i;
+		for(i=1;i<N;i++)
+			{
+			penduleJauge(&(*system).pendul[i], jauge);
+			}
+		}
+
+
+	//fprintf(stderr, "Moyenne = %f\n", systemeMoyenne(system));
+	//fprintf(stderr, "systemeJaugeZero, sortie\n\n");
+	return;
+	}
 
 
 // normalise la moyenne du système à zéro
@@ -102,16 +131,18 @@ void systemeInitialise(systeme * system)
 		{
 		changeFormeDissipation(system, 2);
 		}
+*/
 
 	// Masse initiale Dioptre
 	if((*system).equation == 4)
 		{
-		changeFormeDioptre(system, 1.99);
+	int i;
+			for(i=N/2;i<N;i++)
+				{
+				penduleReinitialiseMasse(&(*system).pendul[i], (*system).masseDroite, (*system).gravitation, (*system).moteur.dt);
+				}
 		}
-*/
-	printf("Systeme initialisé\n");
-	printf("	Couplage = %6.3f\n", (*system).couplage);
-	printf("	Gravitation = %6.3f\n", (*system).gravitation);
+	//printf("Systeme initialisé\n");
 
 	return;
 	}
@@ -125,13 +156,13 @@ void systemeEvolution(systeme * system, int duree)
 		systemeInertie(system);
 		systemeIncremente(system);
 		}
-	systemeJauge(system);
+	systemeJaugeZero(system);
 	return;
 	}
 
 void systemeInitialisePendul(systeme * system)
 	{
-	float m=(*system).masse;
+	float m=(*system).masseGauche;
 	float l=(*system).longueur;
 	float d=(*system).dissipation;
 	float c=(*system).couplage;
@@ -245,7 +276,7 @@ void systemeInertie(systeme * system)
 void systemeIncremente(systeme * system)
 	{//	incremente l'horloge, l'ancien et l'actuel etat du systeme
 
-	(*system).moteur.horloge = (*system).moteur.horloge + (*system).moteur.dt;
+	//(*system).moteur.horloge = (*system).moteur.horloge + (*system).moteur.dt;
 	(*system).moteur.chrono = (*system).moteur.chrono + (*system).moteur.dt;
 
 	int i;
@@ -254,6 +285,21 @@ void systemeIncremente(systeme * system)
 		penduleIncremente(&((*system).pendul[i]));
 		}
 
+	return;
+	}
+
+void systemeAffiche(systeme * system)
+	{// Affichage de la position et des parametres
+	printf("\nParamètres système\n");
+	printf("	Couplage entre les pendules	%4.3f\n", (*system).couplage);
+	printf("	Longueur des pendules		%4.3f\n",(*system).longueur);
+	printf("	Intensité de la gravitation	%4.3f\n",(*system).gravitation);
+	printf("	Masse des pendules à droite : %4.3f, à gauche : %4.3f\n",(*system).masseDroite,(*system).masseGauche);
+	printf("	Masse des pendules \n");
+	/*	int equation;		//	Pendule=1, Harmonique=2, Corde=3, Dioptre=4
+		float dephasage;	//	déphasage entre les limites
+		int libreFixe;		// 0 : périodiques 1 : libres, 2 : fixes, 
+	*/					//		3 libre-fixe, 4 fixe-libre
 	return;
 	}
 

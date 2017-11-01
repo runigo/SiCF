@@ -1,10 +1,10 @@
 /*
-Copyright décembre 2016, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1  simulateur de chaîne de pendules
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
-une représentation graphique de ces fonctions. 
+une représentation graphique de ces fonctions.
 Ce logiciel est régi par la licence CeCILL soumise au droit français et
 respectant les principes de diffusion des logiciels libres. Vous pouvez
 utiliser, modifier et/ou redistribuer ce programme sous les conditions
@@ -41,6 +41,7 @@ void changeGravitation(systeme * system, float facteur);
 void changeMasse(systeme * system, float facteur);
 
 void changeFormeDioptre(systeme * system, float facteur);
+void changeEquation(systeme * system, int equation);
 
 void changeDissipation(systeme * system, float facteur);
 void changeFormeDissipation(systeme * system, int forme);

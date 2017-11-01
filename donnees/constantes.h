@@ -1,7 +1,7 @@
 /*
-Copyright décembre 2016, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1  simulateur de chaîne de pendules
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -38,8 +38,10 @@ termes.
 #include "stdlib.h"
 
 //#define PI 3.14159265358979323846264338327950288419716939937510582
-#define PI 3.1415926535897932384626433832795
-#define DEUXPI 2*PI
+//#define PI 3.14159265358979323846264338327950288419716939937510582
+//#define PI 3.1415926535897932384626433832795
+#define PI 3.14159265359
+#define DEUXPI 6.28318530718
 
 #define LARGEUR 700	//	Largeur de la fenetre
 #define HAUTEUR 300		//	Hauteur de la fenetre
@@ -50,6 +52,30 @@ termes.
 #define SiCF			//	Nom du programme
 
 #define DUREE_MAX 99 // Nombre d'itération du système par affichage
-#define DT_MAX 0.003		//	dt maximal
+#define DT_MAX 0.003		//	discrétisation du temps
+#define DT_MIN 0.000000003	//	discrétisation du temps
 #define MOYENNE_MAX 2.3 // Moyenne maximale
+
+#define DISSIPATION_MAX 333	//	Coeficient de frottement visqueux
+#define DISSIPATION_MAX_DT 0.0999
+#define DISSIPATION_MIN 0.0000003
+
+#define COUPLAGE_MAX 999666	//	Couplage maximal
+#define COUPLAGE_MIN 0.003
+
+#define MASSE_MAX 7777
+#define MASSE_MIN 0.7
+
+#define GRAVITATION_MAX 7777
+#define GRAVITATION_MIN 0.7
+
+#define FREQUENCE_MAX 9123
+#define FREQUENCE_MIN 0.00007
+
+#define AMPLITUDE_MAX 912
+#define AMPLITUDE_MIN 0.00007
+
+#define JOSEPHSON_MAX 912
+#define JOSEPHSON_MIN 0.00007
+
 #endif

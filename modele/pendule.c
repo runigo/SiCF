@@ -1,7 +1,8 @@
 /*
-Copyright décembre 2016, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1  simulateur de chaîne de pendules
+SiCP 1.4 
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -31,59 +32,61 @@ termes.
 */
 
 #include "pendule.h"
-#include "stdio.h"
 
 
-
-// Force de gravitation
-double gravitationPendul(pendule * pendul, int choix);
-
-// dt * vitesse du pendule
-double vitessePendul(pendule * pendul);
-
-// Somme des forces
-double forcesPendul(pendule * pendul, int choix, float courantJosephson);
+	// Force de gravitation
+double gravitationPendul(penduleT * pendul, int choix);
+	// dt * vitesse du pendule
+double vitessePendul(penduleT * pendul);
+	// Somme des forces
+double forcesPendul(penduleT * pendul, int choix, float courantJosephson);
 
 // Variation des parametres reduits
-void changeAlpha(pendule * pendul, float facteur);
-void changeKapa(pendule * pendul, float facteur);
-void changeGamma(pendule * pendul, float facteur);
+void changeAlpha(penduleT * pendul, float facteur);
+void changeKapa(penduleT * pendul, float facteur);
+void changeGamma(penduleT * pendul, float facteur);
 
 
-
-void penduleJauge(pendule * pendul, float jauge)
+void penduleJauge(penduleT * pendule, float jauge)
 	{
-	(*pendul).ancien = (*pendul).ancien + jauge;
-	(*pendul).actuel = (*pendul).actuel + jauge;
-	(*pendul).nouveau = (*pendul).nouveau + jauge;
+	(*pendule).ancien = (*pendule).ancien + jauge;
+	(*pendule).actuel = (*pendule).actuel + jauge;
+	(*pendule).nouveau = (*pendule).nouveau + jauge;
 	return;
 	}
 
-
 // Initialisation des parametres
-void penduleInitialiseParametre(pendule * pendul, float masse, float longueur, float dissipation)
+void penduleInitialiseParametre(penduleT * pendul, float masse, float longueur, float dissipation)
 	{
 	(*pendul).masse = masse;
 	(*pendul).longueur = longueur;
 	(*pendul).dissipation = dissipation;
 	return;
 	}
-void penduleInitialiseExterieur(pendule * pendul, float couplage, float gravitation, float dt)
+void penduleInitialiseExterieur(penduleT * pendul, float couplage, float gravitation, float dt)
 	{
 	(*pendul).couplage = couplage;
-	penduleInitialiseAlpha(pendul, (*pendul).dissipation, dt);
 	penduleInitialiseKapa(pendul, couplage, dt);
 	penduleInitialiseGamma(pendul, gravitation, dt);
+	penduleInitialiseAlpha(pendul, (*pendul).dissipation, dt);
 	return;
 	}
-void penduleInitialisePosition(pendule * pendul, float ancien, float actuel)
+void penduleReinitialiseMasse(penduleT * pendul, float masse, float gravitation, float dt)
+	{
+	(*pendul).masse = masse;
+	penduleInitialiseKapa(pendul, (*pendul).couplage, dt);
+	penduleInitialiseGamma(pendul, gravitation, dt);
+	penduleInitialiseAlpha(pendul, (*pendul).dissipation, dt);
+	return;
+	}
+void penduleInitialisePosition(penduleT * pendul, float ancien, float actuel)
 	{
 	((*pendul).ancien) = ancien;
 	((*pendul).actuel) = actuel;
 	((*pendul).nouveau) = 2 * actuel - ancien;
 	return;
 	}
-void penduleInitialiseDephasage(pendule * pendul, float dephasage)
+void penduleInitialiseDephasage(penduleT * pendul, float dephasage)
 	{
 	((*pendul).dephasage)=dephasage;
 	return;
@@ -91,104 +94,68 @@ void penduleInitialiseDephasage(pendule * pendul, float dephasage)
 
 
 // Variation des parametres
-void penduleChangeMasse(pendule * pendul, float facteur)
+void penduleChangeMasse(penduleT * pendul, float facteur)
 	{
-	if(facteur > 0.1 && facteur < 9.1)
+	if(facteur != 0.0)
 		{
 		(*pendul).masse = (*pendul).masse * facteur;
 		(*pendul).alpha = (*pendul).alpha / facteur;
 		(*pendul).kapa = (*pendul).kapa / facteur;
 		}
-	else
-		{
-		fprintf(stderr, "Erreur penduleChangeMasse = %f\n",(*pendul).masse);
-		}
 	return;
 	}
-void penduleChangeLongueur(pendule * pendul, float facteur)
+void penduleChangeLongueur(penduleT * pendul, float facteur)
 	{
-	if(facteur > 0.1 && facteur < 9.1)
+	if(facteur != 0.0)
 		{
 		(*pendul).longueur = (*pendul).longueur * facteur;
 		(*pendul).gamma = (*pendul).gamma / facteur;
 		}
-	else
-		{
-		fprintf(stderr, "Erreur penduleChangeLongueur = %f\n",(*pendul).longueur);
-		}
 	return;
 	}
-void penduleChangeCouplage(pendule * pendul, float facteur)
+void penduleChangeDissipation(penduleT * pendul, float facteur)
 	{
-	if(facteur > 0.1 && facteur < 9.1)
-		{
-		(*pendul).couplage = (*pendul).couplage * facteur;
-		(*pendul).kapa = (*pendul).kapa * facteur;
-		}
-	else
-		{
-		fprintf(stderr, "Erreur penduleAjouteDephasage = %f\n",(*pendul).dephasage);
-		}
+	(*pendul).alpha = (*pendul).alpha * facteur;
 	return;
 	}
-void penduleChangeDissipation(pendule * pendul, float facteur)
+void penduleChangeCouplage(penduleT * pendul, float facteur)
 	{
-	if(facteur > 0.1 && facteur < 9.1)
-		{
-		(*pendul).alpha = (*pendul).alpha * facteur;
-		}
-	else
-		{
-		fprintf(stderr, "Erreur penduleAjouteDephasage = %f\n",(*pendul).dephasage);
-		}
+	(*pendul).couplage = (*pendul).couplage * facteur;
+	(*pendul).kapa = (*pendul).kapa * facteur;
 	return;
 	}
-void penduleChangeGravitation(pendule * pendul, float facteur)
+void penduleChangeGravitation(penduleT * pendul, float facteur)
 	{
-	if(facteur > 0.1 && facteur < 9.1)
-		{
-		(*pendul).gamma = (*pendul).gamma * facteur;
-		}
-	else
-		{
-		fprintf(stderr, "Erreur penduleAjouteDephasage = %f\n",(*pendul).dephasage);
-		}
+	(*pendul).gamma = (*pendul).gamma * facteur;
 	return;
 	}
-void penduleAjouteDephasage(pendule * pendul, float dephasage)
+void penduleAjouteDephasage(penduleT * pendul, float dephasage)
 	{
-	if(dephasage > -99 && dephasage < 99)
-		{
-		(*pendul).dephasage = (*pendul).dephasage + dephasage;
-		}
-	else
-		{
-		fprintf(stderr, "Erreur penduleAjouteDephasage = %f\n",(*pendul).dephasage);
-		}
+	(*pendul).dephasage = (*pendul).dephasage + dephasage;
 	return;
 	}
 
 // Evolution temporelle du pendule
 
-void penduleIncremente(pendule * pendul)
+void penduleIncremente(penduleT * pendul)
 	{// incremente la position
 	((*pendul).ancien)=((*pendul).actuel);
 	((*pendul).actuel)=((*pendul).nouveau);
 	return;
 	}
 
-void penduleInertie(pendule * pendul, int choix, float courantJosephson)
+void penduleInertie(penduleT * pendul, int choix, float courantJosephson)
 	{// application du principe d'inertie
 	(*pendul).nouveau = forcesPendul(pendul, choix, courantJosephson) + 2*((*pendul).actuel) - (*pendul).ancien;
 	return;
 	}
 
-double forcesPendul(pendule * pendul, int choix, float courantJosephson)
+double forcesPendul(penduleT * pendul, int choix, float courantJosephson)
 	{// somme des forces sur le pendule
 	return ((*pendul).forceCouplage + gravitationPendul(pendul, choix) + ((*pendul).alpha)*vitessePendul(pendul) + courantJosephson);
 	}
 
-void penduleCouplage(pendule * m1, pendule * m2, pendule * m3)
+void penduleCouplage(penduleT * m1, penduleT * m2, penduleT * m3)
 	{// calcul des forces de couplage
 	double gauche, droite;
 
@@ -200,10 +167,10 @@ void penduleCouplage(pendule * m1, pendule * m2, pendule * m3)
 	return;
 	}
 
-double gravitationPendul(pendule * pendul, int equation)
-	{// Calcul de la FORCE DE RAPPEL (gamma est négatif)
+double gravitationPendul(penduleT * pendul, int choix)
+	{// Calcul de la FORCE DE RAPPEL
 	double forceRappel;
-	switch(equation)
+	switch(choix)
 		{
 		case 1:// gravitation
 			forceRappel = (*pendul).gamma * sin((*pendul).actuel);
@@ -214,9 +181,6 @@ double gravitationPendul(pendule * pendul, int equation)
 		case 3:// corde vibrante
 			forceRappel = 0.0;
 		break;
-		case 4:// corde vibrante asymétrique
-			forceRappel = 0.0;
-
 		default:// corde vibrante
 			forceRappel = 0.0;
 		break;
@@ -224,15 +188,14 @@ double gravitationPendul(pendule * pendul, int equation)
 	return forceRappel;
 	}
 
-double vitessePendul(pendule * pendul)
+double vitessePendul(penduleT * pendul)
 	{// Retourne vdt
 	return (*pendul).actuel - (*pendul).ancien;
 	}
 
-//
+
 // Initialisation des parametres reduits
-//
-void penduleInitialiseAlpha(pendule * pendul, float dissipation, float dt)
+void penduleInitialiseAlpha(penduleT * pendul, float dissipation, float dt)
 	{
 	if((*pendul).masse!=0.0)
 		{
@@ -244,7 +207,7 @@ void penduleInitialiseAlpha(pendule * pendul, float dissipation, float dt)
 		}
 	return;
 	}
-void penduleInitialiseKapa(pendule * pendul, float couplage, float dt)
+void penduleInitialiseKapa(penduleT * pendul, float couplage, float dt)
 	{
 	if((*pendul).masse!=0.0)
 		{
@@ -256,35 +219,34 @@ void penduleInitialiseKapa(pendule * pendul, float couplage, float dt)
 		}
 	return;
 	}
-void penduleInitialiseGamma(pendule * pendul, float gravitation, float dt)
+void penduleInitialiseGamma(penduleT * pendul, float gravitation, float dt)
 	{
-	if((*pendul).longueur>0.000001 &&(*pendul).longueur<10000001)
+	if((*pendul).longueur!=0.0)
 		{
 		(*pendul).gamma = - dt * dt * gravitation / (*pendul).longueur;
 		}
 	else
-		{// si longueur nulle, nouvelle définition de gamma
+		{// si masse nulle, nouvelle définition de gamma
 		(*pendul).gamma = - dt * dt * gravitation;
-		fprintf(stderr, "Erreur penduleInitialiseGamma = %f\n",(*pendul).gamma);
 		}
 	return;
 	}
 
 
-void penduleAffiche(pendule * pendul)
+void penduleAffiche(penduleT * pendul)
 	{// Affichage de la position et des parametres
-	fprintf(stderr, "   ancien    %f\n",(*pendul).ancien);
-	fprintf(stderr, "   actuel    %f\n",(*pendul).actuel);
-	fprintf(stderr, "   nouveau   %f\n",(*pendul).nouveau);
+	printf("   ancien    %f\n",(*pendul).ancien);
+	printf("   actuel    %f\n",(*pendul).actuel);
+	printf("   nouveau   %f\n",(*pendul).nouveau);
 
-	fprintf(stderr, "    masse     %f\n",(*pendul).masse);
-	fprintf(stderr, "    longueur  %f\n",(*pendul).longueur);
-	fprintf(stderr, "    alpha    %f\n",(*pendul).alpha);
-	fprintf(stderr, "    kapa     %f\n",(*pendul).kapa);
-	fprintf(stderr, "    gamma    %f\n",(*pendul).gamma);
+	printf("    masse     %f\n",(*pendul).masse);
+	printf("    longueur  %f\n",(*pendul).longueur);
+	printf("    alpha    %f\n",(*pendul).alpha);
+	printf("    kapa     %f\n",(*pendul).kapa);
+	printf("    gamma    %f\n",(*pendul).gamma);
 
-	fprintf(stderr, "forceCouplage %f\n",(*pendul).forceCouplage);
-	fprintf(stderr, "  forceTotale %f\n",(*pendul).forceTotale);
+	printf("forceCouplage %f\n",(*pendul).forceCouplage);
+	printf("  forceTotale %f\n",(*pendul).forceTotale);
 
 	return;
 	}

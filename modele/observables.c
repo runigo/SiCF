@@ -32,28 +32,28 @@ termes.
 
 #include "observables.h"
 
-double observablesEnergieCinetiquePendule(pendule * pendul, double dt);
-double observablesEnergieGravitationPendule(pendule * pendul, double dt);
-double observablesEnergieCouplagePendule(pendule * pendul, pendule * suivant, double dt);
+double observablesEnergieCinetiquePendule(penduleT * pendul, double dt);
+double observablesEnergieGravitationPendule(penduleT * pendul, double dt);
+double observablesEnergieCouplagePendule(penduleT * pendul, penduleT * suivant, double dt);
 double observablesEnergieCinetiqueSysteme(systeme * system);
 double observablesEnergieGravitationSysteme(systeme * system);
 double observablesEnergieCouplageSysteme(systeme * system);
 
-double observablesEnergieCinetiquePendule(pendule * pendul, double dt)
+double observablesEnergieCinetiquePendule(penduleT * pendul, double dt)
 	{
 	double vitesse;
 	vitesse = (*pendul).actuel - (*pendul).ancien;
 	return (0.5 * (*pendul).masse * vitesse*vitesse/dt/dt);
 	}
 
-double observablesEnergieGravitationPendule(pendule * pendul, double dt)
+double observablesEnergieGravitationPendule(penduleT * pendul, double dt)
 	{
 	double h;
 	h=(1.0-cos((*pendul).actuel))*(*pendul).longueur;
 	return ( - (*pendul).masse * (*pendul).gamma * h / dt / dt);
 	}
 
-double observablesEnergieCouplagePendule(pendule * pendul, pendule * suivant, double dt)
+double observablesEnergieCouplagePendule(penduleT * pendul, penduleT * suivant, double dt)
 	{
 	double dx;
 	dx = (*pendul).actuel - (*suivant).actuel;

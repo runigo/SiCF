@@ -1,10 +1,8 @@
 /*
-Copyright décembre 2016, Stephan Runigo
 runigo@free.fr
-SiCF 1.1  simulateur de chaîne de pendules
-Ce logiciel est un programme informatique servant à simuler l'équation
-d'une corde vibrante, à calculer sa transformée de fourier, et à donner
-une représentation graphique de ces fonctions. 
+Copyright novembre 2017, Stephan Runigo
+SiCP 1.4 
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est régi par la licence CeCILL soumise au droit français et
 respectant les principes de diffusion des logiciels libres. Vous pouvez
 utiliser, modifier et/ou redistribuer ce programme sous les conditions
@@ -35,76 +33,65 @@ termes.
 
 #include "../donnees/constantes.h"
 
-typedef struct Pendule pendule;
-	struct Pendule
+typedef struct PenduleT penduleT;
+	struct PenduleT
 		{
-		// Position et vitesse du pendule
 		double ancien, actuel, nouveau;
 
-		// Paramètres physiques
 		float masse;
 		float longueur;
 		float couplage;
-		float dissipation;	// Mémoire pour l'extrémité absorbante
-
-		// Déphasage avec le pendule suivant
 		float dephasage;
-
+		float dissipation; // initialise l'extrémite absorbante
 
 		float alpha;	// dt * constante de frottement / masse
 		float kapa;	// dt2 * constante de couplage / masse
 		float gamma;	// dt2 * accélération gravitationnelle
 
-		// force de couplage avec le suivant
-		double forceCouplage;
-
-		// somme des forces appliquées au pendule :
-		//couplage + gravitation + dissipation + courantJosephson)
-		double forceTotale;
+		double forceCouplage;	// force de couplage avec le suivant
+		double forceTotale;	// somme des forces appliquées au pendule : 
+					// (couplage + gravitation + dissipation + courantJosephson)
 		};
-
 
 	// Initialisation du pendule
 
-void penduleInitialiseParametre(pendule * pendul, float masse, float longueur, float dissipation);
-void penduleInitialiseExterieur(pendule * pendul, float couplage, float gravitation, float dt);
-void penduleInitialisePosition(pendule * pendul, float ancien, float actuel);
-void penduleInitialiseDephasage(pendule * pendul, float dephasage);
-void penduleInitialiseCouplage(pendule * pendul, float couplage, float dt);
+void penduleInitialiseParametre(penduleT * pendul, float masse, float longueur, float dissipation);
+void penduleInitialiseExterieur(penduleT * pendul, float couplage, float gravitation, float dt);
+void penduleInitialiseCouplage(penduleT * pendul, float couplage, float dt);
+void penduleInitialisePosition(penduleT * pendul, float ancien, float actuel);
+void penduleInitialiseDephasage(penduleT * pendul, float dephasage);
 
 
 	// Initialisation des parametres reduits
 
-void penduleInitialiseAlpha(pendule * pendul, float dissipation, float dt);
-void penduleInitialiseKapa(pendule * pendul, float couplage, float dt);
-void penduleInitialiseGamma(pendule * pendul, float gravitation, float dt);
+void penduleInitialiseAlpha(penduleT * pendul, float dissipation, float dt);
+void penduleInitialiseKapa(penduleT * pendul, float couplage, float dt);
+void penduleInitialiseGamma(penduleT * pendul, float gravitation, float dt);
 
 
 	// Variation des parametres
 
-void penduleChangeMasse(pendule * pendul, float facteur);
-void penduleChangeLongueur(pendule * pendul, float facteur);
-void penduleChangeCouplage(pendule * pendul, float facteur);
-void penduleChangeDissipation(pendule * pendul, float facteur);
-void penduleChangeGravitation(pendule * pendul, float facteur);
-void penduleAjouteDephasage(pendule * pendul, float dephasage);
+void penduleReinitialiseMasse(penduleT * pendul, float masse, float gravitation, float dt);
+void penduleChangeMasse(penduleT * pendul, float facteur);
+void penduleChangeLongueur(penduleT * pendul, float facteur);
+void penduleChangeCouplage(penduleT * pendul, float facteur);
+void penduleChangeDissipation(penduleT * pendul, float facteur);
+void penduleChangeGravitation(penduleT * pendul, float facteur);
+void penduleAjouteDephasage(penduleT * pendul, float dephasage);
 
+void penduleJauge(penduleT * pendule, float jauge);
 
 	// Evolution temporelle du pendule
 
-void penduleIncremente(pendule * pendul);
-void penduleInertie(pendule * pendul, int choix, float courantJosephson);
-void penduleCouplage(pendule * pendulPrecedent, pendule * pendul, pendule * pendulSuivant);
+void penduleIncremente(penduleT * pendul);
+void penduleInertie(penduleT * pendul, int choix, float courantJosephson);
+void penduleCouplage(penduleT * m1, penduleT * m2, penduleT * m3);
 
-//int penduleMoteurLimite(pendule * pendul, float amplitude, float phase, int etat);
+int penduleMoteurLimite(penduleT * pendul, float amplitude, float phase, int etat);
 
-
-	// Normalisation de la moyenne
-
-void penduleJauge(pendule * pendul, float jauge);
 
 	// Affichage des paramètres
 
-void penduleAffiche(pendule * pendul);
+void penduleAffiche(penduleT * pendul);
 
 #endif

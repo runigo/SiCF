@@ -1,7 +1,7 @@
 /*
-Copyright décembre 2016, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1  simulateur de chaîne de pendules
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -36,27 +36,18 @@ int main(int nb, char *opt[])
 	{
 	controleur control;
 
-	fprintf(stderr, "\nInitialisations des options");
+	fprintf(stderr, "\nInitialisations des options\n");
 	if(donneesOptions(&control.option)==0)
 		{
-		fprintf(stderr, "\nTraitement des options de la ligne de commande");
+		fprintf(stderr, "Traitement des options de la ligne de commande\n");
 		optionsTraitement(&control.option, nb, opt);
 		}
 
-	fprintf(stderr, "\nInitialisations du système ");
+	fprintf(stderr, "Initialisations\n");
 	if(donneesControleur(&control)==0)
 		{
-		fprintf(stderr, "\nSimulation graphique du système, ");
-		if(control.option.thread==1)
-			{
-			fprintf(stderr, "deux threads\n");
-			processusSimulationGraphique(&control);
-			}
-		else
-			{
-			fprintf(stderr, "processus unique\n");
-			controleurSimulationGraphique(&control);
-			}
+		fprintf(stderr, "Simulation graphique du système, \n");
+		controleurSimulationGraphique(&control);
 		}
 	else
 		{
@@ -72,3 +63,17 @@ int main(int nb, char *opt[])
 	}
 
 //////////////////////////////////////////////////////////////////
+/*
+SiCF 1.1
+		fprintf(stderr, "Simulation graphique du système, \n");
+		if(control.option.thread==1)
+			{
+			//fprintf(stderr, "deux threads\n");
+			processusSimulationGraphique(&control);
+			}
+		else
+			{
+			//fprintf(stderr, "processus unique\n");
+			controleurSimulationGraphique(&control);
+			}
+*/

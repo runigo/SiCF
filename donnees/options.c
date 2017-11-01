@@ -1,7 +1,7 @@
 /*
-Copyright janvier 2017, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1.1  simulateur de corde vibrante et spectre
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -43,6 +43,7 @@ void optionsPause(options * option, char *opt);
 void optionsSoliton(options * option, char *opt);
 void optionsMode(options * option, char *opt);
 void optionsDuree(options * option, char *opt);
+void optionsAide(void);
 
 int optionsTraitement(options * option, int nb, char *opt[])
 	{
@@ -78,11 +79,32 @@ int optionsTraitement(options * option, int nb, char *opt[])
 		if(strcmp(opt[i], "th")==0)
 			optionsThread(option, opt[i+1]);	// Deux threads
 */
+		if(strcmp(opt[i], "aide")==0)
+			optionsAide();	// Affiche l'aide.
+		if(strcmp(opt[i], "help")==0)
+			optionsAide();	// Affiche l'aide.
 
   		i++;
   		}
 		while(i<nb);
 	return 0;
+	}
+
+    	// Couleur du fond 
+void optionsFond(options * option, char *opt)
+	{
+	int fond = atoi(opt);
+	if(fond>0 && fond<255)
+		{
+		(*option).fond = fond;
+		printf("Option fond valide, fond = %d\n", (*option).fond);
+		}
+	else
+		{
+		printf("Option fond non valide, fond = %d\n", (*option).fond);
+		printf("Option fond : 0 < fond < 255\n");
+		}
+	return;
 	}
 
 		// déphasage entre les extrémitées
@@ -171,23 +193,6 @@ void optionsEquation(options * option, char *opt)
 	}
 
 
-    	// Couleur du fond 
-void optionsFond(options * option, char *opt)
-	{
-	int fond = atoi(opt);
-	if(fond>0 && fond<255)
-		{
-		(*option).fond = fond;
-		printf("Option fond valide, fond = %d\n", (*option).fond);
-		}
-	else
-		{
-		printf("Option fond non valide, fond = %d\n", (*option).fond);
-		printf("Option fond : 0 < fond < 255\n");
-		}
-	return;
-	}
-
     	// Nombre d'évolution du système entre les affichages
 void optionsDuree(options * option, char *opt)
 	{
@@ -253,6 +258,62 @@ void optionsThread(options * option, char *opt)
 		printf("Option thread non valide, thread = %d\n", (*option).thread);
 		printf("Option thread : thread = 0 ou 1\n");
 		}
+	return;
+	}
+
+void optionsAide(void)
+	{
+	printf("\n\nAide de SiCF, le simulateur de corde vibrante et transformée de Fourier\n\n");
+
+	printf("OPTIONS DE LA LIGNE DE COMMANDE \n\n");
+
+	printf(" fond		0 < fond < 255		couleur du fond de l'affichage (fond noir : 0, fond blanc : 255)\n");
+	printf(" soliton	-99 < soliton < 99	déphasage entre les extrémitées\n");
+	printf(" dt		0.0 < dt < %4.4f	discrétisation du temps\n", DT_MAX);
+	printf(" frequence				fréquence du générateur\n");
+	printf(" dissipation				dissipation\n");
+	printf(" equation	0 < equation < 5	choix de l'équation\n");
+	printf(" pause		5 < pause < 555		pause entre les affichages en ms\n");
+	printf(" duree		1 < duree < %d		nombre d'évolution du système entre les affichages\n", DUREE_MAX);
+	printf(" mode		= -1 ou 1		mode avec ou sans attente (Mode -1 : Wait, 1 : Poll)\n");
+	//printf("	flèches haut, bas, gauche, droite\n\n");
+
+	printf("\nCOMMANDE CLAVIER\n");
+
+	printf("	a, q : augmenter, diminuer le couplage\n");
+	printf("	z, s : augmenter, diminuer la masse\n");
+
+	printf("	e, d : diminuer, augmenter la dissipation\n");
+	printf("	r, f : retire, forme la dissipation\n");
+	printf("	v : forme l'extrémité absorbante\n");
+
+	printf("	t, g : augmenter, diminuer la gravitation\n");
+	printf("	y, h : ajoute, enlève un déphasage de 2pi\n");
+
+	printf("	w : conditions aux limites périodique\n");
+	printf("	x : extrémités libres\n");
+	printf("	c : extrémités fixe\n");
+	printf("	b, n : fixe une extrémité, libère l'autre\n");
+
+	printf("	flêche droite : allume, éteint le courant Josephson\n");
+	printf("	flêches haut, bas : augmente diminue l'intensité\n");
+	printf("	flêche gauche : change le sens du courant\n");
+
+	printf("	u, j : augmenter, diminuer l'amplitude du générateur\n");
+	printf("	i : démarre une impulsion\n");
+	printf("	o : démarre, éteint le générateur\n");
+	printf("	l : démarre le signal carrée\n");
+	printf("	p, m : augmenter, diminuer la fréquence\n");
+
+	printf("	F5 : affiche les observables\n");
+
+	printf("	Entrée : change le mode temporel\n");
+
+	printf("	+, - : augmente, diminue la vitesse de la simulation\n");
+	printf("	F9, F10, F11, F12 : diminuent, augmentent la vitesse de la simulation\n");
+
+	fprintf(stderr, "\nSortie de SiCF\n");
+	exit(EXIT_FAILURE);
 	return;
 	}
 

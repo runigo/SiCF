@@ -1,10 +1,11 @@
 /*
-Copyright décembre 2016, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1  simulateur de chaîne de pendules
+SiCP 1.4 simulateur de chaîne de pendules
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
-une représentation graphique de ces fonctions. 
+une représentation graphique de ces fonctions.
 Ce logiciel est régi par la licence CeCILL soumise au droit français et
 respectant les principes de diffusion des logiciels libres. Vous pouvez
 utiliser, modifier et/ou redistribuer ce programme sous les conditions
@@ -35,11 +36,11 @@ termes.
 
 #include "../donnees/constantes.h"
 
-typedef struct Moteurs moteurs;
-	struct Moteurs
+typedef struct MoteursT moteursT;
+	struct MoteursT
 		{
 		float dt;			//	discrétisation du temps
-		float horloge;		//	Somme des dt
+		//float horloge;		//	Somme des dt
 		float chrono;		//	Somme des dt remis à zéro dans moteurs
 
 		int generateur;		//	0:eteint, 1:sinus, 2:carre, 3:impulsion
@@ -52,12 +53,15 @@ typedef struct Moteurs moteurs;
 		float courant;		//	Mémorise quand josephson = 0
 		};
 
-float moteursGenerateur(moteurs * m);
+float moteursGenerateur(moteursT * m);
+float moteurJaugeZero(moteursT * m);
 
-void moteursChangeJosephson(moteurs * m, float facteur);
-void moteursChangeFrequence(moteurs * m, float facteur);
-void moteursChangeAmplitude(moteurs * m, float facteur);
-void moteursChangeGenerateur(moteurs * m, int i);
+void moteursChangeJosephson(moteursT * m, float facteur);
+void moteursChangeFrequence(moteursT * m, float facteur);
+void moteursChangeAmplitude(moteursT * m, float facteur);
+void moteursChangeGenerateur(moteursT * m, int i);
+
+void moteursAfficheHorloge(moteursT * m);
 
 
 #endif

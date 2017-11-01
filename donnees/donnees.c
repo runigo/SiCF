@@ -1,7 +1,7 @@
 /*
-Copyright janvier 2017, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1.1  simulateur de corde vibrante et spectre
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -108,11 +108,11 @@ int donneesSysteme(systeme * system, options * option)
 		// Initialisation du moteurs
 
 	(*system).moteur.dt = (*option).dt;	// discrétisation du temps
-	(*system).moteur.horloge = 0.0;
+	//(*system).moteur.horloge = 0.0;
 	(*system).moteur.chrono = 0.0;
 
 	(*system).moteur.courant=15.0;		// Mémoire courant Josephson si = 0
-	(*system).moteur.josephson=(*system).moteur.courant*(*system).moteur.dt*(*system).moteur.dt;
+	(*system).moteur.josephson=0.0;
 
 	(*system).moteur.generateur = 1;	// éteint, sinus, carre, impulsion
 	(*system).moteur.amplitude=0.57;		// Amplitude du générateur de signaux
@@ -129,24 +129,26 @@ int donneesSysteme(systeme * system, options * option)
 
 		// Paramètres physiques
 	(*system).gravitation = 9.81;
-	(*system).masse = 1.0;
+	(*system).masseGauche = 1.0;
+	(*system).masseDroite = 3.0;
 	(*system).longueur = 9.81/4/PI/PI; // = 25 cm => période = 1 s
 	(*system).dissipation = (*option).dissipation;
-	(*system).couplage = 10321.1;
+	(*system).couplage = 100321.1;
 	(*system).dephasage = (*option).dephasage;
 
 
 
 
-	if((*system).equation == 3 || (*system).equation == 4)
-		{		 // donneeCorde;
-		(*system).couplage = (*system).couplage * 10.0;
-		(*system).gravitation = 0.0;
-		(*system).libreFixe = 2;
-		(*system).moteur.josephson=0.0;
-		}
+	//if((*system).equation == 3 || (*system).equation == 4)
+	//	{		 // donneeCorde;
+	//	(*system).couplage = (*system).couplage * 10.0;
+	//	(*system).gravitation = 0.0;
+	//	(*system).libreFixe = 2;
+	//	(*system).moteur.josephson=0.0;
+	//	}
 
 	systemeInitialise(system);
+	changeConditionsLimites(system, (*system).libreFixe);
 	// fichier.c
 	//
 	//fichierLecture(system);

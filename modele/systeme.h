@@ -1,7 +1,7 @@
 /*
-Copyright décembre 2016, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1  simulateur de chaîne de pendules
+SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -39,20 +39,21 @@ termes.
 typedef struct Systeme systeme;
 	struct Systeme
 		{
-		pendule pendul[N];	//	Le systeme est un tableau de pendule
+		penduleT pendul[N];	//	Le systeme est un tableau de pendule
 
-		moteurs moteur;
+		moteursT moteur;
 
 		int equation;		//	Pendule=1, Harmonique=2, Corde=3, Dioptre=4
 
 		float dephasage;	//	déphasage entre les limites
 		int libreFixe;		// 0 : périodiques 1 : libres, 2 : fixes, 
-							//		3 libre-fixe, 4 fixe-libre
+						//		3 libre-fixe, 4 fixe-libre
 
-		float masse;		//
+		float masseDroite;		//
+		float masseGauche;		//
 		float longueur;		//
-		float couplage;		// Mémoire pour conditions limites
-		float dissipation;	// Mémoire si alpha = 0.0
+		float couplage;		//
+		float dissipation;	//
 		float gravitation;	//
 
 		};
