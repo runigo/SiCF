@@ -226,7 +226,9 @@ void moteursChangeJosephson(moteursT * moteur, float facteur)
 			}
 		else
 		{
-		float courant = (*moteur).josephson * facteur;
+		float courant = (*moteur).josephson * facteur / (*moteur).dt / (*moteur).dt;
+		if(courant < 0) courant = -courant;
+			printf("courant = %6.3f\n",courant);
 		if(courant < JOSEPHSON_MAX && courant > JOSEPHSON_MIN)
 			{
 			(*moteur).josephson = ((*moteur).josephson) * facteur;
