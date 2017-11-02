@@ -1,7 +1,7 @@
 /*
 Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.2  simulateur de corde vibrante et spectre
+SiCF 1.2.1  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -91,14 +91,14 @@ void changeDioptre(systeme * system)
 		{
 		for(i=N/2;i<N;i++)
 			{
-			penduleReinitialiseMasse(&(*system).pendul[i], (*system).masseDroite, (*system).gravitation, (*system).moteur.dt);
+			penduleReinitialiseMasse(&(*system).pendul[i], (*system).masseDroite, (*system).moteur.dt);
 			}
 		}
 	else
 		{
 		for(i=0;i<N;i++)
 			{
-			penduleReinitialiseMasse(&(*system).pendul[i], (*system).masseGauche, (*system).gravitation, (*system).moteur.dt);
+			penduleReinitialiseMasse(&(*system).pendul[i], (*system).masseGauche, (*system).moteur.dt);
 			}
 		}
 	return;
@@ -298,6 +298,9 @@ void changeFormeDioptre(systeme * system, float facteur)
 void changeDephasage(systeme * system, float dephasage)
 	{
 	penduleAjouteDephasage(&(*system).pendul[N-1], dephasage);
+
+	printf("Déphasage dernier = %6.3f\n", (*system).pendul[N-1].dephasage);
+
 	}
 
 /*--------------------------------------------------------------*/

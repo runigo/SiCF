@@ -1,7 +1,7 @@
 /*
 Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.2  simulateur de corde vibrante et spectre
+SiCF 1.2.1  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -139,7 +139,7 @@ void systemeInitialise(systeme * system)
 	int i;
 			for(i=N/2;i<N;i++)
 				{
-				penduleReinitialiseMasse(&(*system).pendul[i], (*system).masseDroite, (*system).gravitation, (*system).moteur.dt);
+				penduleReinitialiseMasse(&(*system).pendul[i], (*system).masseDroite, (*system).moteur.dt);
 				}
 		}
 	//printf("Systeme initialisé\n");
@@ -242,17 +242,25 @@ void systemeInertie(systeme * system)
 
 	float moteur = moteursGenerateur(&(*system).moteur);
 
-	// Cas du premier et du dernier pendule
-	//  0 : periodiques 1 : libres, 2 : fixes, 3 libre-fixe, 4 fixe-libre
+				// Cas du premier et du dernier pendule
+
+			//  0 : periodiques 1 : libres, 2 : fixes, 3 libre-fixe, 4 fixe-libre
 
 	if (libreFixe==0 || libreFixe==1 || libreFixe==3)
 		{
-		//penduleInertie(&(*system).pendul[0], equation, courantJosephson + moteur * (*system).moteur.dt * (*system).moteur.dt);
 		penduleInertie(&(*system).pendul[0], equation, courantJosephson);
+		}
+	else
+		{
+		penduleInitialisePosition(&(*system).pendul[0], 0.0, 0.0);
 		}
 	if (libreFixe==0 || libreFixe==1 || libreFixe==4)
 		{
 		penduleInertie(&(*system).pendul[N-1], equation, courantJosephson);
+		}
+	else
+		{
+		penduleInitialisePosition(&(*system).pendul[N-1], (*system).pendul[N-1].dephasage, (*system).pendul[N-1].dephasage);
 		}
 
 	if(etatMoteur!=0) // moteur allumé

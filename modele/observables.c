@@ -1,7 +1,7 @@
 /*
-Copyright décembre 2016, Stephan Runigo
+Copyright novembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1  simulateur de chaîne de pendules
+SiCF 1.2.1  simulateur de chaîne de pendules
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -32,32 +32,40 @@ termes.
 
 #include "observables.h"
 
-double observablesEnergieCinetiquePendule(penduleT * pendul, double dt);
-double observablesEnergieGravitationPendule(penduleT * pendul, double dt);
-double observablesEnergieCouplagePendule(penduleT * pendul, penduleT * suivant, double dt);
+double observablesEnergieCinetiquePendule(penduleT * pendul, float dt);
+double observablesEnergieGravitationPendule(penduleT * pendul, float dt);
+double observablesEnergieHarmoniquePendule(penduleT * pendule, float dt);
+double observablesEnergieCouplagePendule(penduleT * pendul, penduleT * suivant, float dt);
 double observablesEnergieCinetiqueSysteme(systeme * system);
 double observablesEnergieGravitationSysteme(systeme * system);
 double observablesEnergieCouplageSysteme(systeme * system);
 
-double observablesEnergieCinetiquePendule(penduleT * pendul, double dt)
+double observablesEnergieCinetiquePendule(penduleT * pendule, float dt)
 	{
-	double vitesse;
-	vitesse = (*pendul).actuel - (*pendul).ancien;
-	return (0.5 * (*pendul).masse * vitesse*vitesse/dt/dt);
+	double vitesse = (*pendule).actuel - (*pendule).ancien;
+
+	return (0.5 * (*pendule).masse * (*pendule).longueur * (*pendule).longueur * vitesse * vitesse / dt / dt);
 	}
 
-double observablesEnergieGravitationPendule(penduleT * pendul, double dt)
-	{
-	double h;
-	h=(1.0-cos((*pendul).actuel))*(*pendul).longueur;
-	return ( - (*pendul).masse * (*pendul).gamma * h / dt / dt);
+double observablesEnergieGravitationPendule(penduleT * pendule, float dt)
+	{	//(*pendule).gamma est négatif
+	double h = (*pendule).longueur*(1.0-cos((*pendule).actuel));
+
+	return ( - (*pendule).masse * (*pendule).gamma * h / dt / dt);
 	}
 
-double observablesEnergieCouplagePendule(penduleT * pendul, penduleT * suivant, double dt)
-	{
-	double dx;
-	dx = (*pendul).actuel - (*suivant).actuel;
-	return ( - 0.5 * (*pendul).masse * (*pendul).kapa * dx * dx / dt / dt);
+double observablesEnergieHarmoniquePendule(penduleT * pendule, float dt)
+	{	//	k(ressort) = masse.raideur.longueur
+	double h = (*pendule).longueur * (*pendule).actuel * (*pendule).actuel;
+	return ( - 0.5 * (*pendule).masse * (*pendule).gamma * h / dt / dt);
+	}
+
+double observablesEnergieCouplagePendule(penduleT * pendule, penduleT * suivant, float dt)
+	{	//(*pendule).kapa est négatif
+	double x, y;
+	x=(*pendule).actuel;
+	y=(*suivant).actuel - (*pendule).dephasage;
+	return ( - 0.5 * (*pendule).longueur * (*pendule).longueur * (*pendule).masse * (*pendule).kapa *  (x-y) * (x-y) / dt / dt);
 	}
 
 double observablesEnergieCinetiqueSysteme(systeme * system)
@@ -98,6 +106,18 @@ double observablesEnergieGravitationSysteme(systeme * system)
 	return ectotal;
 	}
 
+double observablesEnergieHarmoniqueSysteme(systeme * system)
+	{
+	int i;
+	double ectotal=0.0;
+	float dt = (*system).moteur.dt;
+	for(i=0;i<N;i++)
+		{
+		ectotal=ectotal+observablesEnergieHarmoniquePendule(&((*system).pendul[i]), dt);
+		}
+	return ectotal;
+	}
+
 void observablesAfficheEnergie(systeme * system)
 	{
 	double eCouplage, eGravitation, eCinetique;
@@ -110,9 +130,26 @@ void observablesAfficheEnergie(systeme * system)
 	eCouplage=observablesEnergieCouplageSysteme(system);
 	printf("  Energie de couplage  %12.9f\n", eCouplage);
 
+		//	Pendule=1, Harmonique=2, Corde=3, Dioptre=4
+	if((*system).equation == 1)
+		{
 		//printf("Calcul de l'énergie de gravitation\n");
-	eGravitation=observablesEnergieGravitationSysteme(system);
-	printf("  Energie de gravitation  %12.9f\n", eGravitation);
+		eGravitation=observablesEnergieGravitationSysteme(system);
+		printf("  Energie de gravitation  %12.9f\n", eGravitation);
+		}
+
+	if((*system).equation == 2)
+		{
+		//printf("Calcul de l'énergie de raideur harmonique\n");
+		eGravitation=observablesEnergieHarmoniqueSysteme(system);
+		printf("  Energie  de raideur harmonique  %12.9f\n", eGravitation);
+		}
+
+	if((*system).equation == 3 || (*system).equation == 4)
+		{
+		//printf("Calcul de l'énergie de raideur harmonique\n");
+		eGravitation=0.0;
+		}
 
 	printf("\nEnergie totale      %12.9f\n\n", eCouplage + eGravitation + eCinetique);
 	return;
