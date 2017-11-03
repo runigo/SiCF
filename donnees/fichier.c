@@ -77,51 +77,66 @@ void fichierLecture(systeme * system, int numero)
 
 	switch (numero)
 		{
-		case 0:
+		case 0: // Touche A
 			fichier = fopen("./donnees/enregistrement/01_nulle.sicf", "r");break;
-		case 1:
+		case 1: // Touche Z
 			fichier = fopen("./donnees/enregistrement/050_fr-100.sicf", "r");break;
-		case 2:
+		case 2: // Touche E
 			fichier = fopen("./donnees/enregistrement/050_fr-200.sicf", "r");break;
-		case 3:
+		case 3: // Touche R
 			fichier = fopen("./donnees/enregistrement/052_fr-100-200.sicf", "r");break;
-		case 4:
+		case 4: // Touche T
 			fichier = fopen("./donnees/enregistrement/quanton_t.sicf", "r");break;
-		case 5:
+		case 5: // Touche Y
 			fichier = fopen("./donnees/enregistrement/quanton_y.sicf", "r");break;
-		case 6:
+		case 6: // Touche U
 			fichier = fopen("./donnees/enregistrement/quanton_u.sicf", "r");break;
-		case 7:
+		case 7: // Touche I
 			fichier = fopen("./donnees/enregistrement/quanton_i.sicf", "r");break;
-		case 8:
+		case 8: // Touche O
 			fichier = fopen("./donnees/enregistrement/quanton_o.sicf", "r");break;
-		case 9:
+		case 9: // Touche P
 			fichier = fopen("./donnees/enregistrement/quanton_p.sicf", "r");break;
-		case 10:
+		case 10: // Touche Q
 			fichier = fopen("./donnees/enregistrement/quanton_q.sicf", "r");break;
-		case 11:
+		case 11: // Touche S
 			fichier = fopen("./donnees/enregistrement/quanton_s.sicf", "r");break;
-		case 12:
+		case 12: // Touche D
 			fichier = fopen("./donnees/enregistrement/quanton_d.sicf", "r");break;
-		case 13:
+		case 13: // Touche F
 			fichier = fopen("./donnees/enregistrement/quanton_f.sicf", "r");break;
-		case 14:
+		case 14: // Touche G
 			fichier = fopen("./donnees/enregistrement/quanton_g.sicf", "r");break;
-		case 15:
+		case 15: // Touche H
 			fichier = fopen("./donnees/enregistrement/quanton_h.sicf", "r");break;
+		case 16: // Touche J
+			fichier = fopen("./donnees/enregistrement/quanton_j.sicf", "r");break;
+		case 17: // Touche K
+			fichier = fopen("./donnees/enregistrement/quanton_k.sicf", "r");break;
+		case 18: // Touche L
+			fichier = fopen("./donnees/enregistrement/quanton_l.sicf", "r");break;
+		case 19: // Touche M
+			fichier = fopen("./donnees/enregistrement/quanton_m.sicf", "r");break;
 		default:
 			;
 		}
 	//fichier = fopen("fluxon.sicp", "r");  /* read */
-
-	for(i=0;i<N;i++)
+	if(fichier == NULL)
 		{
-		ancien = 0;
-		actuel = 0;
-		fscanf(fichier, "%f %f\n", &ancien, &actuel);
-		penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
+		printf("Erreur d'ouverture du fichier de réinitialisation\n");
+		printf("	Vérifier le répertoire donnees/enregistrement\n");
 		}
-	fclose(fichier);
+	else
+		{
+		for(i=0;i<N;i++)
+			{
+			ancien = 0;
+			actuel = 0;
+			fscanf(fichier, "%f %f\n", &ancien, &actuel);
+			penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
+			}
+		fclose(fichier);
+		}
 
 	return;
 	}

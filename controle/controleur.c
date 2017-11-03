@@ -438,6 +438,18 @@ int controleurClavierMaj(controleur * control)
 		case SDLK_h:
 			fprintf(stderr, "Réinitialisation du système\n");
 			fichierLecture(&(*control).system, 15);break;
+		case SDLK_j:
+			fprintf(stderr, "Réinitialisation du système\n");
+			fichierLecture(&(*control).system, 16);break;
+		case SDLK_k:
+			fprintf(stderr, "Réinitialisation du système\n");
+			fichierLecture(&(*control).system, 17);break;
+		case SDLK_l:
+			fprintf(stderr, "Réinitialisation du système\n");
+			fichierLecture(&(*control).system, 18);break;
+		case SDLK_m:
+			fprintf(stderr, "Réinitialisation du système\n");
+			fichierLecture(&(*control).system, 19);break;
 
 
 		// Ecriture des fichiers
