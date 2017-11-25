@@ -1,7 +1,7 @@
 /*
-Copyright janvier 2017, Stephan Runigo
+Copyright décembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.1.1  simulateur de corde vibrante et spectre
+SiCF 1.2.3  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -43,7 +43,6 @@ termes.
 typedef struct Controleur controleur;
 	struct Controleur
 		{
-
 
 		options option;		//	Options de la ligne de commande
 

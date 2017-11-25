@@ -39,5 +39,6 @@ termes.
 
 void fichierEcriture(systeme * system, int numero);
 void fichierLecture(systeme * system, int numero);
+void fichierFonction(systeme * system, int numero);
 
 #endif

@@ -1,7 +1,7 @@
 /*
-Copyright novembre 2017, Stephan Runigo
+Copyright décembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.2  simulateur de corde vibrante et spectre
+SiCF 1.2.3  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -40,6 +40,7 @@ int controleurSouris(controleur * control);
 void controleurBoutonSouris(controleur * control, int appui);
 void controleurChangeMode(controleur * control);
 void controleurChangeVitesse(controleur * control, float facteur);
+void controleurChangeSensibilite(controleur * control, float facteur);
 
 void controleurSimulationGraphique(controleur * control)
 	{
@@ -238,6 +239,46 @@ void controleurChangeVitesse(controleur * control, float facteur)
 	return;
 	}
 
+void controleurChangeSensibilite(controleur * control, float facteur)
+	{
+	float nouveau = (*control).option.sensibilite * facteur;
+	if(facteur > 1 )
+		{
+		if( (*control).option.sensibilite > 7)
+			{
+			fprintf(stderr, "sensibilite maximale atteinte");
+			}
+		else
+			{
+			(*control).option.sensibilite = nouveau;
+			(*control).option.augmente = 1+nouveau;
+			(*control).option.diminue = 1/(*control).option.augmente;
+			fprintf(stderr, "\nsensibilite = %f \n", (*control).option.sensibilite);
+			fprintf(stderr, "  augmente = %f \n", (*control).option.augmente);
+			fprintf(stderr, "  diminue = %f \n", (*control).option.diminue);
+			}
+		}
+
+	if(facteur < 1 )
+		{
+		if( (*control).option.sensibilite < 0.01)
+			{
+			fprintf(stderr, "sensibilite minimale atteinte");
+			}
+		else
+			{
+			(*control).option.sensibilite = nouveau;
+			(*control).option.augmente = 1+nouveau;
+			(*control).option.diminue = 1/(*control).option.augmente;
+			fprintf(stderr, "\nsensibilite = %f \n", (*control).option.sensibilite);
+			fprintf(stderr, "  augmente = %f \n", (*control).option.augmente);
+			fprintf(stderr, "  diminue = %f \n", (*control).option.diminue);
+			}
+		}
+
+	return;
+	}
+
 int controleurClavier(controleur * control)
 	{
 	switch ((*control).evenement.key.keysym.sym)
@@ -300,21 +341,23 @@ int controleurClavier(controleur * control)
 
 	// Couplage
 		case SDLK_a:
-			changeCouplage(&(*control).system, 1.1);break;
+			changeCouplage(&(*control).system, 1.3);break;
+			//changeCouplage(&(*control).system, 1.1);break;
 		case SDLK_q:
-			changeCouplage(&(*control).system, 0.9);break;
+			changeCouplage(&(*control).system, 0.7);break;
+			//changeCouplage(&(*control).system, 0.9);break;
 
 	// Masse
 		case SDLK_z:
-			changeMasse(&(*control).system, 1.1);break;
+			changeMasse(&(*control).system, (*control).option.augmente);break;
 		case SDLK_s:
-			changeMasse(&(*control).system, 0.91);break;
+			changeMasse(&(*control).system, (*control).option.diminue);break;
 
 	// Gravitation
 		case SDLK_t:
-			changeGravitation(&(*control).system, 1.1);break;
+			changeGravitation(&(*control).system, (*control).option.augmente);break;
 		case SDLK_g:
-			changeGravitation(&(*control).system, 0.91);break;
+			changeGravitation(&(*control).system, (*control).option.diminue);break;
 
 	// Moteur jonction Josephson
 		case SDLK_UP:
@@ -398,28 +441,30 @@ int controleurClavierMaj(controleur * control)
 			fichierLecture(&(*control).system, 1);break;
 		case SDLK_e:
 			fprintf(stderr, "Réinitialisation du système\n");
-			fichierLecture(&(*control).system, 2);break;
+			//fichierLecture(&(*control).system, 2);break;
+			fichierFonction(&(*control).system, 2);break;//Triangle
 		case SDLK_r:
 			fprintf(stderr, "Réinitialisation du système\n");
-			fichierLecture(&(*control).system, 3);break;
+			//fichierLecture(&(*control).system, 3);break;
+			fichierFonction(&(*control).system, 3);break;//Triangle
 		case SDLK_t:
 			fprintf(stderr, "Réinitialisation du système\n");
-			fichierLecture(&(*control).system, 4);break;
+			//fichierLecture(&(*control).system, 4);break;
+			fichierFonction(&(*control).system, 4);break;//Triangle
 		case SDLK_y:
 			fprintf(stderr, "Réinitialisation du système\n");
-			fichierLecture(&(*control).system, 5);break;
+			//fichierLecture(&(*control).system, 5);break;
+			fichierFonction(&(*control).system, 5);break;//Triangle
 		case SDLK_u:
 			fprintf(stderr, "Réinitialisation du système\n");
-			fichierLecture(&(*control).system, 6);break;
+			//fichierLecture(&(*control).system, 6);break;
+			fichierFonction(&(*control).system, 6);break;//Triangle
 		case SDLK_i:
 			fprintf(stderr, "Réinitialisation du système\n");
-			fichierLecture(&(*control).system, 7);break;
-		case SDLK_o:
-			fprintf(stderr, "Réinitialisation du système\n");
-			fichierLecture(&(*control).system, 8);break;
-		case SDLK_p:
-			fprintf(stderr, "Réinitialisation du système\n");
-			fichierLecture(&(*control).system, 9);break;
+			//fichierLecture(&(*control).system, 7);break;
+			fichierFonction(&(*control).system, 7);break;//Triangle
+
+
 		case SDLK_q:
 			fprintf(stderr, "Réinitialisation du système\n");
 			fichierLecture(&(*control).system, 10);break;
@@ -444,12 +489,22 @@ int controleurClavierMaj(controleur * control)
 		case SDLK_k:
 			fprintf(stderr, "Réinitialisation du système\n");
 			fichierLecture(&(*control).system, 17);break;
+
+		case SDLK_o:
+			//fprintf(stderr, "Réinitialisation du système\n");
+			//fichierLecture(&(*control).system, 8);break;
+		case SDLK_p:
+			//fprintf(stderr, "Réinitialisation du système\n");
+			controleurChangeSensibilite(&(*control), 1.1);break;
+			//fprintf(stderr, "Réinitialisation du système\n");
+			//fichierLecture(&(*control).system, 9);break;
 		case SDLK_l:
-			fprintf(stderr, "Réinitialisation du système\n");
-			fichierLecture(&(*control).system, 18);break;
+			//fprintf(stderr, "Réinitialisation du système\n");
+			//fichierLecture(&(*control).system, 18);break;
 		case SDLK_m:
-			fprintf(stderr, "Réinitialisation du système\n");
-			fichierLecture(&(*control).system, 19);break;
+			controleurChangeSensibilite(&(*control), 0.91);break;
+			//fprintf(stderr, "Réinitialisation du système\n");
+			//fichierLecture(&(*control).system, 19);break;
 
 
 		// Ecriture des fichiers
@@ -508,7 +563,7 @@ int controleurClavierCtrl(controleur * control)
 			controleurChangeMode(control);break;
 
 	// Enregistrement
-		// Sauvegarde du système
+		// Sauvegarde du système fichierEcriture sans effet
 		case SDLK_a:
 			fprintf(stderr, "Sauvegarde du système\n");
 			fichierEcriture(&(*control).system, 0);break;

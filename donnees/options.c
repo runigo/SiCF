@@ -33,6 +33,7 @@ termes.
 #include "options.h"
 
 void optionsDt(options * option, char *opt);
+void optionsMoteur(options * option, char *opt);
 void optionsFrequence(options * option, char *opt);
 void optionsDissipation(options * option, char *opt);
 void optionsEquation(options * option, char *opt);
@@ -69,6 +70,9 @@ int optionsTraitement(options * option, int nb, char *opt[])
 		if(strcmp(opt[i], "soliton")==0 && opt[i+1]!=NULL)
 			optionsSoliton(option, opt[i+1]);	// déphasage entre les extrémitées
 
+
+		if(strcmp(opt[i], "moteur")==0 && opt[i+1]!=NULL)
+			optionsMoteur(option, opt[i+1]);	// état du moteur
 
 		if(strcmp(opt[i], "frequence")==0 && opt[i+1]!=NULL)
 			optionsFrequence(option, opt[i+1]);	// fréquence du générateur
@@ -137,6 +141,23 @@ void optionsDt(options * option, char *opt)
 		{
 		printf("Option dt non valide, dt = %f\n", (*option).dt);
 		printf("Option dt : 0.0 < dt < %f\n", DT_MAX);
+		}
+	return;
+	}
+
+    	// État du moteur
+void optionsMoteur(options * option, char *opt)
+	{
+	int etat = atoi(opt);
+	if(etat>-1 && etat<4)
+		{
+		(*option).moteur = etat;
+		printf("Option moteur valide, moteur = %d\n", (*option).moteur);
+		}
+	else
+		{
+		printf("Option moteur non valide, moteur = %d\n", (*option).moteur);
+		printf("Option moteur : -1 < fr < 4\n");
 		}
 	return;
 	}

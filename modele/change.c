@@ -1,7 +1,7 @@
 /*
-Copyright novembre 2017, Stephan Runigo
+Copyright décembre 2017, Stephan Runigo
 runigo@free.fr
-SiCF 1.2.1  simulateur de corde vibrante et spectre
+SiCF 1.2.3  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -38,21 +38,43 @@ void changeDioptre(systeme * system);
 void changeCouplage(systeme * system, float facteur)
 	{// Multiplie le couplage par facteur
 	int i;
-	if((*system).couplage*facteur < COUPLAGE_MAX && (*system).couplage*facteur > COUPLAGE_MIN)
+	float nouveau = (*system).couplage*facteur;
+	if(facteur > 1)
 		{
-		(*system).couplage=(*system).couplage*facteur;
-
-		for(i=0;i<N;i++)
+		if(nouveau < COUPLAGE_MAX)
 			{
-			penduleChangeCouplage(&(*system).pendul[i], facteur);
-			}
+			(*system).couplage=nouveau;
+			for(i=0;i<N;i++)
+				{
+				penduleChangeCouplage(&(*system).pendul[i], facteur);
+				}
 
-		printf("Couplage = %6.3f\n", (*system).couplage);
+			printf("Couplage = %6.3f\n", (*system).couplage);
+			}
+		else
+			{
+			printf("Couplage maximal atteint : ");
+			printf("Couplage = %6.3f\n", (*system).couplage);
+			}
 		}
-	else
+
+	if(facteur < 1 )
 		{
-		printf("Couplage limite atteint : ");
-		printf("Couplage = %6.3f\n", (*system).couplage);
+		if(nouveau > COUPLAGE_MIN)
+			{
+			(*system).couplage=nouveau;
+			for(i=0;i<N;i++)
+				{
+				penduleChangeCouplage(&(*system).pendul[i], facteur);
+				}
+
+			printf("Couplage = %6.3f\n", (*system).couplage);
+			}
+		else
+			{
+			printf("Couplage minimal atteint : ");
+			printf("Couplage = %6.3f\n", (*system).couplage);
+			}
 		}
 
 	return;
@@ -61,24 +83,43 @@ void changeCouplage(systeme * system, float facteur)
 void changeGravitation(systeme * system, float facteur)
 	{
 	int i;
-	if((*system).gravitation*facteur < COUPLAGE_MAX && (*system).gravitation*facteur > COUPLAGE_MIN)
+	float nouveau = (*system).gravitation*facteur;
+	if(facteur > 1)
 		{
-
-		// Multiplie la gravitation du systeme par facteur
-		(*system).gravitation = (*system).gravitation * facteur;
-
-		// Multiplie la gravitation des pendules par facteur
-		for(i=0;i<N;i++)
+		if(nouveau < GRAVITATION_MAX)
 			{
-			penduleChangeGravitation(&(*system).pendul[i], facteur);
-			}
+			(*system).gravitation=nouveau;
+			for(i=0;i<N;i++)
+				{
+				penduleChangeGravitation(&(*system).pendul[i], facteur);
+				}
 
-		printf("Gravitation = %6.3f\n", (*system).gravitation);
+			printf("Gravitation = %6.3f\n", (*system).gravitation);
+			}
+		else
+			{
+			printf("Gravitation maximal atteint : ");
+			printf("gravitation = %6.3f\n", (*system).gravitation);
+			}
 		}
-	else
+
+	if(facteur < 1 )
 		{
-		printf("Gravitation limite atteint : ");
-		printf("Gravitation = %6.3f\n", (*system).gravitation);
+		if(nouveau > GRAVITATION_MIN)
+			{
+			(*system).gravitation=nouveau;
+			for(i=0;i<N;i++)
+				{
+				penduleChangeGravitation(&(*system).pendul[i], facteur);
+				}
+
+			printf("Gravitation = %6.3f\n", (*system).couplage);
+			}
+		else
+			{
+			printf("Gravitation minimal atteint : ");
+			printf("gravitation = %6.3f\n", (*system).couplage);
+			}
 		}
 
 	return;
