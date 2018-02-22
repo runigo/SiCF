@@ -1,5 +1,5 @@
 /*
-Copyright novembre 2017, Stephan Runigo
+Copyright février 2018, Stephan Runigo
 runigo@free.fr
 SiCF 1.2  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
@@ -36,10 +36,10 @@ termes.
 #include "pendule.h"
 #include "moteurs.h"
 
-typedef struct Systeme systeme;
-	struct Systeme
+typedef struct SystemeT systemeT;
+	struct SystemeT
 		{
-		penduleT pendul[N];	//	Le systeme est un tableau de pendule
+		penduleT pendule[N];	//	Le système est un tableau de pendule
 
 		moteursT moteur;
 
@@ -58,11 +58,11 @@ typedef struct Systeme systeme;
 
 		};
 
-void systemeInitialise(systeme * system);
-void systemeAffiche(systeme * system);
+void systemeInitialise(systemeT * systeme);
+void systemeAffiche(systemeT * systeme);
 
-// évolution temporelle du systeme, "duree" cycle d'évolution
-void systemeEvolution(systeme * system, int duree);
+// évolution temporelle du système, "duree" cycle d'évolution
+void systemeEvolution(systemeT * systeme, int duree);
 
 
 #endif

@@ -1,5 +1,5 @@
 /*
-Copyright décembre 2017, Stephan Runigo
+Copyright février 2018, Stephan Runigo
 runigo@free.fr
 SiCF 1.2.3  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
@@ -36,17 +36,17 @@ termes.
 #include "systeme.h"
 
 // Variation des parametres
-void changeCouplage(systeme * system, float facteur);
-void changeGravitation(systeme * system, float facteur);
-void changeMasse(systeme * system, float facteur);
+void changeCouplage(systemeT * systeme, float facteur);
+void changeGravitation(systemeT * systeme, float facteur);
+void changeMasse(systemeT * systeme, float facteur);
 
-//void changeFormeDioptre(systeme * system, float facteur);
-void changeEquation(systeme * system, int equation);
+//void changeFormeDioptre(systemeT * systeme, float facteur);
+void changeEquation(systemeT * systeme, int equation);
 
-void changeDissipation(systeme * system, float facteur);
-void changeFormeDissipation(systeme * system, int forme);
+void changeDissipation(systemeT * systeme, float facteur);
+void changeFormeDissipation(systemeT * systeme, int forme);
 
-void changeConditionsLimites(systeme * system, int libreFixe);
-void changeDephasage(systeme * system, float dephasage);
+void changeConditionsLimites(systemeT * systeme, int libreFixe);
+void changeDephasage(systemeT * systeme, float dephasage);
 
 #endif

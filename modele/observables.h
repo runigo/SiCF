@@ -1,5 +1,5 @@
 /*
-Copyright décembre 2016, Stephan Runigo
+Copyright février 2018, Stephan Runigo
 runigo@free.fr
 SiCF 1.1  simulateur de chaîne de pendules
 Ce logiciel est un programme informatique servant à simuler l'équation
@@ -35,6 +35,6 @@ termes.
 
 #include "systeme.h"
 
-void observablesAfficheEnergie(systeme * system);
+void observablesAfficheEnergie(systemeT * systeme);
 
 #endif

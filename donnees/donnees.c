@@ -1,5 +1,5 @@
 /*
-Copyright décembre 2017, Stephan Runigo
+Copyright février 2018, Stephan Runigo
 runigo@free.fr
 SiCF 1.2.3  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
@@ -40,7 +40,7 @@ termes.
 	//		Initialisation de la SDL
 
 
-int donneesSysteme(systeme * system, options * option);
+int donneesSysteme(systemeT * systeme, options * option);
 int donneesGraphe(graphe * graph, options * option);
 
 int donneesControleur(controleur * control)
@@ -49,17 +49,17 @@ int donneesControleur(controleur * control)
 	(*control).option.sortie = 0;	// Sortie de SiCP si > 0
 
 		fprintf(stderr, " Initialisation du système\n");
-	donneesSysteme(&(*control).system, &(*control).option);
+	donneesSysteme(&(*control).systeme, &(*control).option);
 
 		//fprintf(stderr, " Création du système\n");
-	//systemeCreation(&(*control).system);
+	//systemeCreation(&(*control).systeme);
 
 		fprintf(stderr, " Initialisation des graphe\n");
 	donneesGraphe(&(*control).graphCorde, &(*control).option);
 	donneesGraphe(&(*control).graphSpectre, &(*control).option);
 
 		fprintf(stderr, " Initialisation SDL\n");
-	graphiqueInitialise((*control).system.equation, (*control).option.fond);
+	graphiqueInitialise((*control).systeme.equation, (*control).option.fond);
 
 	return 0;
 	}
@@ -107,56 +107,56 @@ int donneesOptions(options * option)
 	return 0;
 	}
 
-int donneesSysteme(systeme * system, options * option)
+int donneesSysteme(systemeT * systeme, options * option)
 	{
 
 		// Initialisation du moteurs
 
-	(*system).moteur.dt = (*option).dt;	// discrétisation du temps
-	//(*system).moteur.horloge = 0.0;
-	(*system).moteur.chrono = 0.0;
+	(*systeme).moteur.dt = (*option).dt;	// discrétisation du temps
+	//(*systeme).moteur.horloge = 0.0;
+	(*systeme).moteur.chrono = 0.0;
 
-	(*system).moteur.courant=15.0;		// Mémoire courant Josephson si = 0
-	(*system).moteur.josephson=0.0;
+	(*systeme).moteur.courant=15.0;		// Mémoire courant Josephson si = 0
+	(*systeme).moteur.josephson=0.0;
 
-	(*system).moteur.generateur = (*option).moteur;	// éteint, sinus, carre, impulsion
-	(*system).moteur.amplitude=0.57;		// Amplitude du générateur de signaux
-	(*system).moteur.frequence=(*option).frequence;	// Fréquence du générateur de signaux
-	(*system).moteur.phi=0;
+	(*systeme).moteur.generateur = (*option).moteur;	// éteint, sinus, carre, impulsion
+	(*systeme).moteur.amplitude=0.57;		// Amplitude du générateur de signaux
+	(*systeme).moteur.frequence=(*option).frequence;	// Fréquence du générateur de signaux
+	(*systeme).moteur.phi=0;
 
 
 		// Caractéristique de la chaîne
-	(*system).libreFixe = 2;	// 0 periodique, 1 libre, 2 fixe
-	(*system).equation = (*option).equation;	// 1 : pendule pesant
+	(*systeme).libreFixe = 2;	// 0 periodique, 1 libre, 2 fixe
+	(*systeme).equation = (*option).equation;	// 1 : pendule pesant
 												// 2 : linéarisation
 												// 3 : corde
 												// 4 : dioptre
 
 		// Paramètres physiques
-	(*system).gravitation = 9.81;
-	(*system).masseGauche = 1.0;
-	(*system).masseDroite = 3.0;
-	(*system).longueur = 9.81/4/PI/PI; // = 25 cm => période = 1 s
-	(*system).dissipation = (*option).dissipation;
-	(*system).couplage = 100321.1;
-	(*system).dephasage = (*option).dephasage;
+	(*systeme).gravitation = 9.81;
+	(*systeme).masseGauche = 1.0;
+	(*systeme).masseDroite = 3.0;
+	(*systeme).longueur = 9.81/4/PI/PI; // = 25 cm => période = 1 s
+	(*systeme).dissipation = (*option).dissipation;
+	(*systeme).couplage = 100321.1;
+	(*systeme).dephasage = (*option).dephasage;
 
 
 
 
-	//if((*system).equation == 3 || (*system).equation == 4)
+	//if((*systeme).equation == 3 || (*systeme).equation == 4)
 	//	{		 // donneeCorde;
-	//	(*system).couplage = (*system).couplage * 10.0;
-	//	(*system).gravitation = 0.0;
-	//	(*system).libreFixe = 2;
-	//	(*system).moteur.josephson=0.0;
+	//	(*systeme).couplage = (*systeme).couplage * 10.0;
+	//	(*systeme).gravitation = 0.0;
+	//	(*systeme).libreFixe = 2;
+	//	(*systeme).moteur.josephson=0.0;
 	//	}
 
-	systemeInitialise(system);
-	changeConditionsLimites(system, (*system).libreFixe);
+	systemeInitialise(systeme);
+	changeConditionsLimites(systeme, (*systeme).libreFixe);
 	// fichier.c
 	//
-	//fichierLecture(system);
+	//fichierLecture(systeme);
 
 	return 0;
 	}

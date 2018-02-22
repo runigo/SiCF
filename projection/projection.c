@@ -42,27 +42,27 @@ void projectionMoyenneGraphe(graphe * spectr)
 	return;
 	}
 
-void projectionSystemeGraphe(systeme * system, graphe * graph)
+void projectionSystemeGraphe(systemeT * systeme, graphe * graph)
 	{
-	//		Projette le systeme sur le graphe "corde"
+	//		Projette le système sur le graphe "corde"
 	int i, x, y;
 	double max, min, psi;
 	int imin, imax, iamp;
 
 	// Recherche du maximum et du minimum
 
-	max = (*system).pendul[0].nouveau;
-	min = (*system).pendul[0].nouveau;
+	max = (*systeme).pendule[0].nouveau;
+	min = (*systeme).pendule[0].nouveau;
 
 	for(i=1;i<N;i++)
 		{
-		if((*system).pendul[i].nouveau > max)
+		if((*systeme).pendule[i].nouveau > max)
 			{
-			max = (*system).pendul[i].nouveau;
+			max = (*systeme).pendule[i].nouveau;
 			}
-		if((*system).pendul[i].nouveau < min)
+		if((*systeme).pendule[i].nouveau < min)
 			{
-			min = (*system).pendul[i].nouveau;
+			min = (*systeme).pendule[i].nouveau;
 			}
 		}
 
@@ -82,7 +82,7 @@ void projectionSystemeGraphe(systeme * system, graphe * graph)
 
 		// Position verticale
 
-		psi = (*system).pendul[i].nouveau;
+		psi = (*systeme).pendule[i].nouveau;
 
 		y = HAUTEUR/4; // Position moyenne du graphe
 
@@ -104,17 +104,17 @@ void projectionSystemeGraphe(systeme * system, graphe * graph)
 	return;
 	}
 
-void projectionSystemeFonction(systeme * system, fonction * spectreG, fonction * spectreD)
+void projectionSystemeFonction(systemeT * systeme, fonction * spectreG, fonction * spectreD)
 	{
-	//	Projette les parties gauche et droite du systeme sur deux fonctions
+	//	Projette les parties gauche et droite du système sur deux fonctions
 	int i;
 	for(i=0;i<Ne;i++)
 		{
 
-		(*spectreG).reel[i]=(*system).pendul[i].nouveau;
+		(*spectreG).reel[i]=(*systeme).pendule[i].nouveau;
 		(*spectreG).imag[i]=0.0;
 
-		(*spectreD).reel[i]=(*system).pendul[i+Ne].nouveau;
+		(*spectreD).reel[i]=(*systeme).pendule[i+Ne].nouveau;
 		(*spectreD).imag[i]=0.0;
 
 		}

@@ -1,5 +1,5 @@
 /*
-Copyright décembre 2017, Stephan Runigo
+Copyright février 2018, Stephan Runigo
 runigo@free.fr
 SiCF 1.2.3  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
@@ -32,14 +32,14 @@ termes.
 
 #include "fichier.h"
 
-int fichierFonctionNulle(systeme * system);
-int fichierFonctionTriangle(systeme * system, int numero);
-int fichierFonctionCarre(systeme * system, int numero);
-int fichierFonctionSinus(systeme * system, int numero);
+int fichierFonctionNulle(systemeT * systeme);
+int fichierFonctionTriangle(systemeT * systeme, int numero);
+int fichierFonctionCarre(systemeT * systeme, int numero);
+int fichierFonctionSinus(systemeT * systeme, int numero);
 
 
 
-void fichierEcriture(systeme * system, int numero)
+void fichierEcriture(systemeT * systeme, int numero)
 	{
 	FILE *fichier; /* pointeur sur FILE */
 	double ancien, actuel;
@@ -66,9 +66,9 @@ void fichierEcriture(systeme * system, int numero)
 
 	for(i=0;i<N;i++)
 		{
-		//penduleInitialisePosition(&(*system).pendul[i], 0.0, 0.0);
-		ancien = (*system).pendul[i].ancien;
-		actuel =(*system).pendul[i].nouveau;
+		//penduleInitialisePosition(&(*systeme).pendule[i], 0.0, 0.0);
+		ancien = (*systeme).pendule[i].ancien;
+		actuel =(*systeme).pendule[i].nouveau;
 		fprintf(fichier, "%f %f\n", ancien, actuel);
 		}
 	fclose(fichier);
@@ -76,7 +76,7 @@ void fichierEcriture(systeme * system, int numero)
 	return;
 	}
 
-void fichierLecture(systeme * system, int numero)
+void fichierLecture(systemeT * systeme, int numero)
 	{
 	FILE *fichier; /* pointeur sur FILE */
 	float ancien, actuel;
@@ -140,7 +140,7 @@ void fichierLecture(systeme * system, int numero)
 			ancien = 0;
 			actuel = 0;
 			fscanf(fichier, "%f %f\n", &ancien, &actuel);
-			penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
+			penduleInitialisePosition(&(*systeme).pendule[i], ancien, actuel);
 			}
 		fclose(fichier);
 		}
@@ -148,57 +148,57 @@ void fichierLecture(systeme * system, int numero)
 	return;
 	}
 
-void fichierFonction(systeme * system, int numero)
+void fichierFonction(systemeT * systeme, int numero)
 	{
 	switch (numero)
 		{
 		case 0: // Touche A
-			fichierFonctionNulle(system);break;
+			fichierFonctionNulle(systeme);break;
 		case 1: // Touche Z
-			fichierFonctionSinus(system, 1);break;
+			fichierFonctionSinus(systeme, 1);break;
 		case 2: // Touche E
-			fichierFonctionTriangle(system, 2);break;
+			fichierFonctionTriangle(systeme, 2);break;
 		case 3: // Touche R
-			fichierFonctionTriangle(system, 3);break;
+			fichierFonctionTriangle(systeme, 3);break;
 		case 4: // Touche T
-			fichierFonctionTriangle(system, 4);break;
+			fichierFonctionTriangle(systeme, 4);break;
 		case 5: // Touche Y
-			fichierFonctionTriangle(system, 5);break;
+			fichierFonctionTriangle(systeme, 5);break;
 		case 6: // Touche U
-			fichierFonctionTriangle(system, 6);break;
+			fichierFonctionTriangle(systeme, 6);break;
 		case 7: // Touche I
-			fichierFonctionTriangle(system, 7);break;
+			fichierFonctionTriangle(systeme, 7);break;
 		case 8: // Touche O
-			fichierFonctionTriangle(system, 8);break;
+			fichierFonctionTriangle(systeme, 8);break;
 		case 9: // Touche P
-			fichierFonctionTriangle(system, 9);break;
+			fichierFonctionTriangle(systeme, 9);break;
 		case 10: // Touche Q
-			fichierFonctionSinus(system, 1);break;
+			fichierFonctionSinus(systeme, 1);break;
 		case 11: // Touche S
-			fichierFonctionSinus(system, 2);break;
+			fichierFonctionSinus(systeme, 2);break;
 		case 12: // Touche D
-			fichierFonctionSinus(system, 3);break;
+			fichierFonctionSinus(systeme, 3);break;
 		case 13: // Touche F
-			fichierFonctionSinus(system, 4);break;
+			fichierFonctionSinus(systeme, 4);break;
 		case 14: // Touche G
-			fichierFonctionSinus(system, 5);break;
+			fichierFonctionSinus(systeme, 5);break;
 		case 15: // Touche H
-			fichierFonctionCarre(system, 1);break;
+			fichierFonctionCarre(systeme, 1);break;
 		case 16: // Touche J
-			fichierFonctionCarre(system, 2);break;
+			fichierFonctionCarre(systeme, 2);break;
 		case 17: // Touche K
-			fichierFonctionCarre(system, 3);break;
+			fichierFonctionCarre(systeme, 3);break;
 		case 18: // Touche L
-			fichierFonctionCarre(system, 4);break;
+			fichierFonctionCarre(systeme, 4);break;
 		case 19: // Touche M
-			fichierFonctionCarre(system, 5);break;
+			fichierFonctionCarre(systeme, 5);break;
 		default:
 			;
 		}
 	return;
 	}
 
-int fichierFonctionNulle(systeme * system)
+int fichierFonctionNulle(systemeT * systeme)
 	{
 	float ancien, actuel;
 	int i;
@@ -206,17 +206,17 @@ int fichierFonctionNulle(systeme * system)
 		{
 		ancien = 0.0;
 		actuel = 0.0;
-		penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
+		penduleInitialisePosition(&(*systeme).pendule[i], ancien, actuel);
 		}
 
 	return 0;
 	}
 
-int fichierFonctionTriangle(systeme * system, int numero)
+int fichierFonctionTriangle(systemeT * systeme, int numero)
 	{
 	float ancien, actuel;
 	int i;
-	fichierFonctionNulle(system);
+	fichierFonctionNulle(systeme);
 	switch (numero)
 		{
 		case 1:
@@ -225,8 +225,8 @@ int fichierFonctionTriangle(systeme * system, int numero)
 				{
 				ancien = (float)(i*numero)/(float)N;
 				actuel = ancien;
-				penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
-				penduleInitialisePosition(&(*system).pendul[N-1-i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[N-1-i], ancien, actuel);
 				}break;
 		case 2:
 			printf("Réinitialisation du système, numero = %d\n", numero);
@@ -234,8 +234,8 @@ int fichierFonctionTriangle(systeme * system, int numero)
 				{
 				ancien = (float)(i*numero)/(float)N;
 				actuel = ancien;
-				penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
-				penduleInitialisePosition(&(*system).pendul[N/2-1-i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[N/2-1-i], ancien, actuel);
 				}break;
 		case 3:
 			printf("Réinitialisation du système, numero = %d\n", numero);
@@ -243,8 +243,8 @@ int fichierFonctionTriangle(systeme * system, int numero)
 				{
 				ancien = (float)(i*numero)/(float)N;
 				actuel = ancien;
-				penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
-				penduleInitialisePosition(&(*system).pendul[N/4-1-i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[N/4-1-i], ancien, actuel);
 				}break;
 		case 4:
 			printf("Réinitialisation du système, numero = %d\n", numero);
@@ -252,8 +252,8 @@ int fichierFonctionTriangle(systeme * system, int numero)
 				{
 				ancien = (float)(i*numero)/(float)N;
 				actuel = ancien;
-				penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
-				penduleInitialisePosition(&(*system).pendul[N/8-1-i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[N/8-1-i], ancien, actuel);
 				}break;
 		case 5:
 			printf("Réinitialisation du système, numero = %d\n", numero);
@@ -261,8 +261,8 @@ int fichierFonctionTriangle(systeme * system, int numero)
 				{
 				ancien = (float)(i*numero)/(float)N;
 				actuel = ancien;
-				penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
-				penduleInitialisePosition(&(*system).pendul[N/16-1-i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[N/16-1-i], ancien, actuel);
 				}break;
 		case 6:
 			printf("Réinitialisation du système, numero = %d\n", numero);
@@ -270,19 +270,19 @@ int fichierFonctionTriangle(systeme * system, int numero)
 				{
 				ancien = (float)(i*numero)/(float)N;
 				actuel = ancien;
-				penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
-				penduleInitialisePosition(&(*system).pendul[N/64-1-i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[i], ancien, actuel);
+				penduleInitialisePosition(&(*systeme).pendule[N/64-1-i], ancien, actuel);
 				}break;
 		}
 
 	return 0;
 	}
 
-int fichierFonctionCarre(systeme * system, int numero)
+int fichierFonctionCarre(systemeT * systeme, int numero)
 	{
 	float ancien, actuel;
 	int i;
-	fichierFonctionNulle(system);
+	fichierFonctionNulle(systeme);
 	if(numero == 1)
 		{
 		printf("Réinitialisation du système, numero = 1\n");
@@ -294,19 +294,19 @@ int fichierFonctionCarre(systeme * system, int numero)
 			{
 			ancien = i*numero/N;
 			actuel = ancien;
-			penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
-			penduleInitialisePosition(&(*system).pendul[N-1-i], ancien, actuel);
+			penduleInitialisePosition(&(*systeme).pendule[i], ancien, actuel);
+			penduleInitialisePosition(&(*systeme).pendule[N-1-i], ancien, actuel);
 			}
 		}
 
 	return 0;
 	}
 
-int fichierFonctionSinus(systeme * system, int numero)
+int fichierFonctionSinus(systemeT * systeme, int numero)
 	{
 	float ancien, actuel;
 	int i;
-	fichierFonctionNulle(system);
+	fichierFonctionNulle(systeme);
 	if(numero == 1)
 		{
 		printf("Réinitialisation du système, numero = 1\n");
@@ -318,8 +318,8 @@ int fichierFonctionSinus(systeme * system, int numero)
 			{
 			ancien = i*numero/N;
 			actuel = ancien;
-			penduleInitialisePosition(&(*system).pendul[i], ancien, actuel);
-			penduleInitialisePosition(&(*system).pendul[N-1-i], ancien, actuel);
+			penduleInitialisePosition(&(*systeme).pendule[i], ancien, actuel);
+			penduleInitialisePosition(&(*systeme).pendule[N-1-i], ancien, actuel);
 			}
 		}
 

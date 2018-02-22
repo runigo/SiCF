@@ -1,5 +1,5 @@
 /*
-Copyright décembre 2017, Stephan Runigo
+Copyright février 2018, Stephan Runigo
 runigo@free.fr
 SiCF 1.2.3  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
@@ -46,7 +46,7 @@ typedef struct Controleur controleur;
 
 		options option;		//	Options de la ligne de commande
 
-		systeme system;		//	Modélisation physique de la chaîne
+		systemeT systeme;		//	Modélisation physique de la chaîne
 
 		fonction spectreG;	//	Spectre de la partie gauche
 		fonction spectreD;	//	Spectre de la partie droite
@@ -67,8 +67,8 @@ void controleurSimulationGraphique(controleur * control);
 
 
 		// Fonctions utilisées par processus.c
-void controleurEvolutionSpectre(systeme * system, fonction * spectreG, fonction * spectreD);
-void controleurEvolutionGraphCorde(systeme * system, graphe * jonction);
+void controleurEvolutionSpectre(systemeT * systeme, fonction * spectreG, fonction * spectreD);
+void controleurEvolutionGraphCorde(systemeT * systeme, graphe * jonction);
 void controleurEvolutionGraphSpectre(fonction * spectreG, fonction * spectreD, graphe * spectr);
 
 		// Fonctions utilisées par processus.c de SiCP
@@ -88,7 +88,7 @@ int controleurActionClavier(controleur * control);
 #include "controle.h"
 #include "unistd.h"
 
-void controleurGraphique(systeme * system, controle * control);
-void controleurTerminal(systeme * system, controle * control);
+void controleurGraphique(systemeT * systeme, controle * control);
+void controleurTerminal(systemeT * systeme, controle * control);
 
 #endif

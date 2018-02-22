@@ -1,5 +1,5 @@
 /*
-Copyright décembre 2017, Stephan Runigo
+Copyright février 2018, Stephan Runigo
 runigo@free.fr
 SiCF 1.2.3  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
@@ -32,29 +32,29 @@ termes.
 
 #include "change.h"
 
-void changeLimite(systeme * system);
-void changeDioptre(systeme * system);
+void changeLimite(systemeT * systeme);
+void changeDioptre(systemeT * systeme);
 
-void changeCouplage(systeme * system, float facteur)
+void changeCouplage(systemeT * systeme, float facteur)
 	{// Multiplie le couplage par facteur
 	int i;
-	float nouveau = (*system).couplage*facteur;
+	float nouveau = (*systeme).couplage*facteur;
 	if(facteur > 1)
 		{
 		if(nouveau < COUPLAGE_MAX)
 			{
-			(*system).couplage=nouveau;
+			(*systeme).couplage=nouveau;
 			for(i=0;i<N;i++)
 				{
-				penduleChangeCouplage(&(*system).pendul[i], facteur);
+				penduleChangeCouplage(&(*systeme).pendule[i], facteur);
 				}
 
-			printf("Couplage = %6.3f\n", (*system).couplage);
+			printf("Couplage = %6.3f\n", (*systeme).couplage);
 			}
 		else
 			{
 			printf("Couplage maximal atteint : ");
-			printf("Couplage = %6.3f\n", (*system).couplage);
+			printf("Couplage = %6.3f\n", (*systeme).couplage);
 			}
 		}
 
@@ -62,44 +62,44 @@ void changeCouplage(systeme * system, float facteur)
 		{
 		if(nouveau > COUPLAGE_MIN)
 			{
-			(*system).couplage=nouveau;
+			(*systeme).couplage=nouveau;
 			for(i=0;i<N;i++)
 				{
-				penduleChangeCouplage(&(*system).pendul[i], facteur);
+				penduleChangeCouplage(&(*systeme).pendule[i], facteur);
 				}
 
-			printf("Couplage = %6.3f\n", (*system).couplage);
+			printf("Couplage = %6.3f\n", (*systeme).couplage);
 			}
 		else
 			{
 			printf("Couplage minimal atteint : ");
-			printf("Couplage = %6.3f\n", (*system).couplage);
+			printf("Couplage = %6.3f\n", (*systeme).couplage);
 			}
 		}
 
 	return;
 	}
 
-void changeGravitation(systeme * system, float facteur)
+void changeGravitation(systemeT * systeme, float facteur)
 	{
 	int i;
-	float nouveau = (*system).gravitation*facteur;
+	float nouveau = (*systeme).gravitation*facteur;
 	if(facteur > 1)
 		{
 		if(nouveau < GRAVITATION_MAX)
 			{
-			(*system).gravitation=nouveau;
+			(*systeme).gravitation=nouveau;
 			for(i=0;i<N;i++)
 				{
-				penduleChangeGravitation(&(*system).pendul[i], facteur);
+				penduleChangeGravitation(&(*systeme).pendule[i], facteur);
 				}
 
-			printf("Gravitation = %6.3f\n", (*system).gravitation);
+			printf("Gravitation = %6.3f\n", (*systeme).gravitation);
 			}
 		else
 			{
 			printf("Gravitation maximal atteint : ");
-			printf("gravitation = %6.3f\n", (*system).gravitation);
+			printf("gravitation = %6.3f\n", (*systeme).gravitation);
 			}
 		}
 
@@ -107,55 +107,55 @@ void changeGravitation(systeme * system, float facteur)
 		{
 		if(nouveau > GRAVITATION_MIN)
 			{
-			(*system).gravitation=nouveau;
+			(*systeme).gravitation=nouveau;
 			for(i=0;i<N;i++)
 				{
-				penduleChangeGravitation(&(*system).pendul[i], facteur);
+				penduleChangeGravitation(&(*systeme).pendule[i], facteur);
 				}
 
-			printf("Gravitation = %6.3f\n", (*system).couplage);
+			printf("Gravitation = %6.3f\n", (*systeme).couplage);
 			}
 		else
 			{
 			printf("Gravitation minimal atteint : ");
-			printf("gravitation = %6.3f\n", (*system).couplage);
+			printf("gravitation = %6.3f\n", (*systeme).couplage);
 			}
 		}
 
 	return;
 	}
 
-void changeDioptre(systeme * system)
+void changeDioptre(systemeT * systeme)
 	{
 	int i;
-	if((*system).equation==4)
+	if((*systeme).equation==4)
 		{
 		for(i=N/2;i<N;i++)
 			{
-			penduleReinitialiseMasse(&(*system).pendul[i], (*system).masseDroite, (*system).moteur.dt);
+			penduleReinitialiseMasse(&(*systeme).pendule[i], (*systeme).masseDroite, (*systeme).moteur.dt);
 			}
 		}
 	else
 		{
 		for(i=0;i<N;i++)
 			{
-			penduleReinitialiseMasse(&(*system).pendul[i], (*system).masseGauche, (*system).moteur.dt);
+			penduleReinitialiseMasse(&(*systeme).pendule[i], (*systeme).masseGauche, (*systeme).moteur.dt);
 			}
 		}
 	return;
 	}
-void changeMasse(systeme * system, float facteur)
+void changeMasse(systemeT * systeme, float facteur)
 	{
-	float droite = (*system).masseDroite;
-	float gauche = (*system).masseGauche;
-	if((*system).equation==4)
+	float droite = (*systeme).masseDroite;
+	float gauche = (*systeme).masseGauche;
+	if((*systeme).equation==4)
 		{
 		float masse = droite*facteur;
 		if(masse < MASSE_MAX && masse > MASSE_MIN)
 			{
-			(*system).masseDroite=masse;
-			changeDioptre(system);
-			printf("Masse à gauche = %6.3f, masse à droite = %6.3f\n", (*system).masseGauche, masse);
+			(*systeme).masseDroite=masse;
+			changeDioptre(systeme);
+			printf("Masse à gauche = %6.3f, masse à droite = %6.3f\n", (*systeme).masseGauche, masse);
 			}
 		else
 			{
@@ -167,8 +167,8 @@ void changeMasse(systeme * system, float facteur)
 		float masse = gauche*facteur;
 		if(masse < MASSE_MAX && masse > MASSE_MIN)
 			{
-			(*system).masseGauche=masse;
-			changeDioptre(system);
+			(*systeme).masseGauche=masse;
+			changeDioptre(systeme);
 			printf("Masse = %6.3f\n", masse);
 			}
 		else
@@ -180,37 +180,37 @@ void changeMasse(systeme * system, float facteur)
 	return;
 	}
 
-void changeDissipation(systeme * system, float facteur)
+void changeDissipation(systemeT * systeme, float facteur)
 	{
 	int i;
 
-	float dissipation = (*system).dissipation * facteur;
-	float dissipationMaximale = DISSIPATION_MAX_DT/(*system).moteur.dt;
+	float dissipation = (*systeme).dissipation * facteur;
+	float dissipationMaximale = DISSIPATION_MAX_DT/(*systeme).moteur.dt;
 
 	if(dissipation < dissipationMaximale && dissipation > DISSIPATION_MIN)
 		{
-		// Multiplie la dissipation du systeme par facteur <> 0
-		// Conserve en mémoire la dissipation du systeme si = 0
+		// Multiplie la dissipation du système par facteur <> 0
+		// Conserve en mémoire la dissipation du système si = 0
 		if(facteur!=0.0)
 			{
-			(*system).dissipation = (*system).dissipation * facteur;
+			(*systeme).dissipation = (*systeme).dissipation * facteur;
 			}
 		// Multiplie la dissipation des pendules par facteur
 		for(i=0;i<N;i++)
 			{
-			penduleChangeDissipation(&(*system).pendul[i], facteur);
+			penduleChangeDissipation(&(*systeme).pendule[i], facteur);
 			}
 		}
 	else
 		{
 		printf("dissipation limite atteinte\n");
 		}
-	printf("Dissipation = %6.3f\n", (*system).dissipation);
+	printf("Dissipation = %6.3f\n", (*systeme).dissipation);
 
 	return;
 	}
 
-void changeFormeDissipation(systeme * system, int forme)
+void changeFormeDissipation(systemeT * systeme, int forme)
 	{// initialise une dissipation nulle(0), uniforme(1) ou extremite absorbante(2)
 	float dissipation = 0.99;
 
@@ -219,13 +219,13 @@ void changeFormeDissipation(systeme * system, int forme)
 
 	if (  forme == 1 )
 		{
-		if ( (*system).dissipation != 0.0 )
+		if ( (*systeme).dissipation != 0.0 )
 			{
-			dissipation = (*system).dissipation;
+			dissipation = (*systeme).dissipation;
 			}
 		else
 			{
-			(*system).dissipation = dissipation;
+			(*systeme).dissipation = dissipation;
 			}
 		}
 
@@ -235,15 +235,15 @@ void changeFormeDissipation(systeme * system, int forme)
 		{
 		if ( forme == 2 )
 			{
-			dissipation = (*system).pendul[i].dissipation;
+			dissipation = (*systeme).pendule[i].dissipation;
 			}
-		penduleInitialiseAlpha(&(*system).pendul[i], dissipation, (*system).moteur.dt);
+		penduleInitialiseAlpha(&(*systeme).pendule[i], dissipation, (*systeme).moteur.dt);
 		}
 
 	if ( forme == 2 )
 		{
-		printf("Dissipation premier= %6.3f\n", (*system).pendul[0].dissipation);
-		printf("Dissipation dernier= %6.3f\n", (*system).pendul[N-1].dissipation);
+		printf("Dissipation premier= %6.3f\n", (*systeme).pendule[0].dissipation);
+		printf("Dissipation dernier= %6.3f\n", (*systeme).pendule[N-1].dissipation);
 		}
 	else
 		{ // Cas uniforme (forme=1)
@@ -253,37 +253,37 @@ void changeFormeDissipation(systeme * system, int forme)
 	return;
 	}
 
-void changeEquation(systeme * system, int equation)
+void changeEquation(systemeT * systeme, int equation)
 	{// Choix de l'equation
 
 	switch(equation)
 		{
 		case 1: // Pendules
-			(*system).equation = 1;
+			(*systeme).equation = 1;
 			printf("equation = Pendules\n");break;
 		case 2: // Harmoniques
-			(*system).equation = 2;
+			(*systeme).equation = 2;
 			printf("equation = Harmoniques\n");break;
 		case 3: // Corde
-			(*system).equation = 3;
-			changeDioptre(system);
+			(*systeme).equation = 3;
+			changeDioptre(systeme);
 			printf("equation = Corde\n");break;
 		case 4: // Corde asymétrique
-			(*system).equation = 4;
-			changeDioptre(system);
+			(*systeme).equation = 4;
+			changeDioptre(systeme);
 			printf("equation = Corde asymétrique\n");break;
 		default:
 			;
 		}
 
-	printf("equation = %d \n\n", (*system).equation);
+	printf("equation = %d \n\n", (*systeme).equation);
 	return;
 	}
 
-void changeConditionsLimites(systeme * system, int libreFixe)
+void changeConditionsLimites(systemeT * systeme, int libreFixe)
 	{
-	(*system).libreFixe=libreFixe;
-	printf("libreFixe = %d, ", (*system).libreFixe);
+	(*systeme).libreFixe=libreFixe;
+	printf("libreFixe = %d, ", (*systeme).libreFixe);
 
 	switch(libreFixe)
 		{
@@ -306,41 +306,41 @@ void changeConditionsLimites(systeme * system, int libreFixe)
 			;
 		}
 
-	changeLimite(system);
+	changeLimite(systeme);
 
 	return;
 	}
 
-void changeLimite(systeme * system)
+void changeLimite(systemeT * systeme)
 	{// Initialise les conditions aux limites
 	float couplage=0.0;
-	if ((*system).libreFixe==0 || (*system).libreFixe==2)
+	if ((*systeme).libreFixe==0 || (*systeme).libreFixe==2)
 		{
-		couplage=(*system).couplage;
+		couplage=(*systeme).couplage;
 		}
 
-	penduleInitialiseKapa(&(*system).pendul[N-1], couplage, (*system).moteur.dt);
+	penduleInitialiseKapa(&(*systeme).pendule[N-1], couplage, (*systeme).moteur.dt);
 
 	printf("Couplage dernier = %6.3f\n", couplage);
 
 	return;
 	}
 
-void changeFormeDioptre(systeme * system, float facteur)
+void changeFormeDioptre(systemeT * systeme, float facteur)
 	{
 	int i;
 	for(i=N/2;i<N;i++)
 		{
-		penduleChangeMasse(&((*system).pendul[i]), facteur);
+		penduleChangeMasse(&((*systeme).pendule[i]), facteur);
 		}
 	return;
 	}
 
-void changeDephasage(systeme * system, float dephasage)
+void changeDephasage(systemeT * systeme, float dephasage)
 	{
-	penduleAjouteDephasage(&(*system).pendul[N-1], dephasage);
+	penduleAjouteDephasage(&(*systeme).pendule[N-1], dephasage);
 
-	printf("Déphasage dernier = %6.3f\n", (*system).pendul[N-1].dephasage);
+	printf("Déphasage dernier = %6.3f\n", (*systeme).pendule[N-1].dephasage);
 
 	}
 

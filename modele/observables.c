@@ -1,5 +1,5 @@
 /*
-Copyright novembre 2017, Stephan Runigo
+Copyright février 2018, Stephan Runigo
 runigo@free.fr
 SiCF 1.2.1  simulateur de chaîne de pendules
 Ce logiciel est un programme informatique servant à simuler l'équation
@@ -32,13 +32,13 @@ termes.
 
 #include "observables.h"
 
-double observablesEnergieCinetiquePendule(penduleT * pendul, float dt);
-double observablesEnergieGravitationPendule(penduleT * pendul, float dt);
+double observablesEnergieCinetiquePendule(penduleT * pendule, float dt);
+double observablesEnergieGravitationPendule(penduleT * pendule, float dt);
 double observablesEnergieHarmoniquePendule(penduleT * pendule, float dt);
-double observablesEnergieCouplagePendule(penduleT * pendul, penduleT * suivant, float dt);
-double observablesEnergieCinetiqueSysteme(systeme * system);
-double observablesEnergieGravitationSysteme(systeme * system);
-double observablesEnergieCouplageSysteme(systeme * system);
+double observablesEnergieCouplagePendule(penduleT * pendule, penduleT * suivant, float dt);
+double observablesEnergieCinetiqueSysteme(systemeT * systeme);
+double observablesEnergieGravitationSysteme(systemeT * systeme);
+double observablesEnergieCouplageSysteme(systemeT * systeme);
 
 double observablesEnergieCinetiquePendule(penduleT * pendule, float dt)
 	{
@@ -68,84 +68,84 @@ double observablesEnergieCouplagePendule(penduleT * pendule, penduleT * suivant,
 	return ( - 0.5 * (*pendule).longueur * (*pendule).longueur * (*pendule).masse * (*pendule).kapa *  (x-y) * (x-y) / dt / dt);
 	}
 
-double observablesEnergieCinetiqueSysteme(systeme * system)
+double observablesEnergieCinetiqueSysteme(systemeT * systeme)
 	{
 	int i;
 	double ectotal=0.0;
-	float dt = (*system).moteur.dt;
+	float dt = (*systeme).moteur.dt;
 	for(i=0;i<N;i++)
 		{
-		ectotal=ectotal+observablesEnergieCinetiquePendule(&((*system).pendul[i]), dt);
+		ectotal=ectotal+observablesEnergieCinetiquePendule(&((*systeme).pendule[i]), dt);
 		}
 	return ectotal;
 	}
 
-double observablesEnergieCouplageSysteme(systeme * system)
+double observablesEnergieCouplageSysteme(systemeT * systeme)
 	{
 	int i;
 	double ectotal=0.0;
-	float dt = (*system).moteur.dt;
+	float dt = (*systeme).moteur.dt;
 	for(i=1;i<N;i++)
 		{
-		ectotal=ectotal+observablesEnergieCouplagePendule(&((*system).pendul[i-1]), &((*system).pendul[i]), dt);
+		ectotal=ectotal+observablesEnergieCouplagePendule(&((*systeme).pendule[i-1]), &((*systeme).pendule[i]), dt);
 		}
-	if((*system).libreFixe==0)
-		ectotal=ectotal+observablesEnergieCouplagePendule(&((*system).pendul[N-1]), &((*system).pendul[0]), dt);
+	if((*systeme).libreFixe==0)
+		ectotal=ectotal+observablesEnergieCouplagePendule(&((*systeme).pendule[N-1]), &((*systeme).pendule[0]), dt);
 	return ectotal;
 	}
 
-double observablesEnergieGravitationSysteme(systeme * system)
+double observablesEnergieGravitationSysteme(systemeT * systeme)
 	{
 	int i;
 	double ectotal=0.0;
-	float dt = (*system).moteur.dt;
+	float dt = (*systeme).moteur.dt;
 	for(i=0;i<N;i++)
 		{
-		ectotal=ectotal+observablesEnergieGravitationPendule(&((*system).pendul[i]), dt);
+		ectotal=ectotal+observablesEnergieGravitationPendule(&((*systeme).pendule[i]), dt);
 		}
 	return ectotal;
 	}
 
-double observablesEnergieHarmoniqueSysteme(systeme * system)
+double observablesEnergieHarmoniqueSysteme(systemeT * systeme)
 	{
 	int i;
 	double ectotal=0.0;
-	float dt = (*system).moteur.dt;
+	float dt = (*systeme).moteur.dt;
 	for(i=0;i<N;i++)
 		{
-		ectotal=ectotal+observablesEnergieHarmoniquePendule(&((*system).pendul[i]), dt);
+		ectotal=ectotal+observablesEnergieHarmoniquePendule(&((*systeme).pendule[i]), dt);
 		}
 	return ectotal;
 	}
 
-void observablesAfficheEnergie(systeme * system)
+void observablesAfficheEnergie(systemeT * systeme)
 	{
 	double eCouplage, eGravitation, eCinetique;
 
 		//printf("\nCalcul de l'énergie cinétique\n");
-	eCinetique=observablesEnergieCinetiqueSysteme(system);
+	eCinetique=observablesEnergieCinetiqueSysteme(systeme);
 	printf("\n  Energie cinétique    %12.9f\n", eCinetique);
 
 		//printf("Calcul de l'énergie de couplage\n");
-	eCouplage=observablesEnergieCouplageSysteme(system);
+	eCouplage=observablesEnergieCouplageSysteme(systeme);
 	printf("  Energie de couplage  %12.9f\n", eCouplage);
 
 		//	Pendule=1, Harmonique=2, Corde=3, Dioptre=4
-	if((*system).equation == 1)
+	if((*systeme).equation == 1)
 		{
 		//printf("Calcul de l'énergie de gravitation\n");
-		eGravitation=observablesEnergieGravitationSysteme(system);
+		eGravitation=observablesEnergieGravitationSysteme(systeme);
 		printf("  Energie de gravitation  %12.9f\n", eGravitation);
 		}
 
-	if((*system).equation == 2)
+	if((*systeme).equation == 2)
 		{
 		//printf("Calcul de l'énergie de raideur harmonique\n");
-		eGravitation=observablesEnergieHarmoniqueSysteme(system);
+		eGravitation=observablesEnergieHarmoniqueSysteme(systeme);
 		printf("  Energie  de raideur harmonique  %12.9f\n", eGravitation);
 		}
 
-	if((*system).equation == 3 || (*system).equation == 4)
+	if((*systeme).equation == 3 || (*systeme).equation == 4)
 		{
 		//printf("Calcul de l'énergie de raideur harmonique\n");
 		eGravitation=0.0;
