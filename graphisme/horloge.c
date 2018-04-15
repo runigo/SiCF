@@ -1,7 +1,7 @@
 /*
-Copyright décembre 2016, Stephan Runigo
+Copyright avril 2018, Stephan Runigo
 runigo@free.fr
-SiCF 1.1  simulateur de chaîne de pendules
+SiCF 1.4  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -30,40 +30,58 @@ pris connaissance de la licence CeCILL, et que vous en avez accepté les
 termes.
 */
 
-#ifndef _PROCESSUS_
-#define _PROCESSUS_
+// Librement inspiré de 
+// http://piconano2015.wixsite.com/soft/code
+// Copyright 2015 par PicoSoft.
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
+#include "horloge.h"
 
-#include "controleur.h"
+Uint32 callTimer(Uint32 it, void *para);
 
-int processusSimulationGraphique (controleur * control);
+int horlogeCreation(horlogeT * horloge)
+	{
+		//fprintf(stderr, " Initialisation du timer, fond = %d\n", fond);
+		// définition d'un User Event
+	(*horloge).evenement.type=SDL_USEREVENT;
+
+		// Lancement du Timer principal
+	//(*horloge).horloge = SDL_AddTimer(TEMPS_AFFICHAGE, horlogeEvenement, horloge);
+	(*horloge).horloge = SDL_AddTimer(TEMPS_AFFICHAGE, callTimer, horloge);
+
+		//int *parametre;
+
+	(*horloge).date = 0;          // la référence de horloge du programme (nombre de période timer principal)
+	(*horloge).dateActuel = 0;          // 
+	(*horloge).datePrecedente = 0;         //
+
+	return 0;
+	}
+
+Uint32 callTimer(Uint32 it, void *para)
+{   // Callback du timer principal
+    // on créé un event pour passer le wait
+SDL_Event user_event;
+    // définition d'un User Event
+    user_event.type=SDL_USEREVENT;
+    SDL_PushEvent(&user_event);
+	(void) para;
+    return it;
+}
 
 /*
-void* threadGraphique (void* arg);
-void* threadSysteme (void* arg);
+Uint32 horlogeEvenement(Uint32 it, horlogeT * horloge)
+	{   // Rappel automatique du timer principal
+		// on crée un évenement pour passer le wait
+	SDL_PushEvent(&(*horloge).evenement);
 
-#include "projection3D.h"
-#include "graphique.h"
-//#include "unistd.h"
-#include "systeme.h"
-typedef struct Controleur controleur;
-	struct Controleur
-		{
-		systeme system;
-
-		projection3D troisD;
-		projectionGr graphI;
-
-		SDL_Event evenement;
-
-		int duree;	// 100 : temps reel
-		int mode;	// -1 : Wait, 1 : Poll
-		};
-void controleurGraphique(controleur * control);
-void controleurTerminal(controleur * control);
+	return it;
+	}
 */
-#endif
-/////////////////////////////////////////////////////////////////
+int horlogeSuppression(horlogeT * horloge)
+	{
+	SDL_RemoveTimer((*horloge).horloge);  // arret timer
+
+	return 0;
+	}
+
+//////////////////////////////////////////////////////////////////////////////

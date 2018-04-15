@@ -30,45 +30,30 @@ pris connaissance de la licence CeCILL, et que vous en avez accepté les
 termes.
 */
 
-#ifndef _CONTROLEUR_
-#define _CONTROLEUR_
+// Librement inspiré de 
+// http://piconano2015.wixsite.com/soft/code
+// Copyright 2015 par PicoSoft.
 
-#include "../donnees/options.h"			//	Options de la ligne de commande
-#include "../modele/change.h"			//	Changement des parametres du système
-#include "../modele/observables.h"		//	Calculs énergétiques
-#include "../projection/projection.h"	//	Projection entre les représentations
-#include "../graphisme/graphique.h"		//	Librairie SDL
-#include "../graphisme/horloge.h"		//	Librairie SDL
-#include "../donnees/fichier.h"
+#ifndef _HORLOGE_
+#define _HORLOGE_
 
-typedef struct ControleurT controleurT;
-	struct ControleurT
+#include "graphique.h"
+
+typedef struct HorlogeT horlogeT;
+	struct HorlogeT
 		{
-
-		options option;		//	Options de la ligne de commande
-
-		systemeT systeme;		//	Modélisation physique de la chaîne
-
-		fonction spectreG;	//	Spectre de la partie gauche
-		fonction spectreD;	//	Spectre de la partie droite
-
-		graphe graphCorde;		//	Représentation graphique de la corde
-		graphe graphSpectre;	//	Représentation graphique des spectres
-
-		SDL_Event evenement;	//	Évenement SDL
-
-		horlogeT horloge; // Horloge SDL
-
-		int sortie; // sortie de SiCP si > 0
-
-		int appui;	//	1 si le bouton de la souris est appuyé, 0 sinon.
-
+		SDL_Event evenement;	// Evenement
+		SDL_TimerID horloge;          // timer principal
+		//int *parametre;
+		long int date;          // la référence de horloge du programme (nombre de période timer principal)
+		long int dateActuel;          // 
+		long int datePrecedente;         //
 		};
 
-		// Fonction utilisée par principale.c
-int controleurSimulationGraphique(controleurT * controleur);
+Uint32 horlogeEvenement(Uint32 it, horlogeT * horloge);
 
-
+int horlogeCreation(horlogeT * horloge);
+int horlogeSuppression(horlogeT * horloge);
+void horlogeChangeSupport(horlogeT * horloge);
 
 #endif
-

@@ -1,7 +1,7 @@
 /*
-Copyright février 2018, Stephan Runigo
+Copyright avril 2018, Stephan Runigo
 runigo@free.fr
-SiCF 1.2.3  simulateur de corde vibrante et spectre
+SiCF 1.4  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -43,23 +43,26 @@ termes.
 int donneesSysteme(systemeT * systeme, options * option);
 int donneesGraphe(graphe * graph, options * option);
 
-int donneesControleur(controleur * control)
+int donneesControleur(controleurT * controleur)
 	{
 
-	(*control).option.sortie = 0;	// Sortie de SiCP si > 0
+	(*controleur).sortie = 0;	// Sortie de SiCP si > 0
 
 		fprintf(stderr, " Initialisation du système\n");
-	donneesSysteme(&(*control).systeme, &(*control).option);
+	donneesSysteme(&(*controleur).systeme, &(*controleur).option);
 
 		//fprintf(stderr, " Création du système\n");
-	//systemeCreation(&(*control).systeme);
+	//systemeCreation(&(*controleur).systeme);
 
 		fprintf(stderr, " Initialisation des graphe\n");
-	donneesGraphe(&(*control).graphCorde, &(*control).option);
-	donneesGraphe(&(*control).graphSpectre, &(*control).option);
+	donneesGraphe(&(*controleur).graphCorde, &(*controleur).option);
+	donneesGraphe(&(*controleur).graphSpectre, &(*controleur).option);
 
 		fprintf(stderr, " Initialisation SDL\n");
-	graphiqueInitialise((*control).systeme.equation, (*control).option.fond);
+	graphiqueInitialise((*controleur).option.fond);
+
+		fprintf(stderr, " Initialisation horloge SDL\n");
+	horlogeCreation(&(*controleur).horloge);
 
 	return 0;
 	}

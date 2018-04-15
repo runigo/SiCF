@@ -1,7 +1,7 @@
 /*
-Copyright décembre 2016, Stephan Runigo
+Copyright avril 2018, Stephan Runigo
 runigo@free.fr
-SiCF 1.1  simulateur de chaîne de pendules
+SiCF 1.4  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -40,9 +40,9 @@ void graphiqueDisque(int X, int Y, int rayon, Uint32 couleur);
 
 SDL_Surface* affichage;
 
-void graphiqueInitialise(int equation, int fond)
+void graphiqueInitialise(int fond)
 	{
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
 		{
 		fprintf(stderr, "Erreur à l'initialisation de la SDL : %s\n", SDL_GetError());
 		exit(EXIT_FAILURE);
@@ -51,14 +51,7 @@ void graphiqueInitialise(int equation, int fond)
 
 	atexit(SDL_Quit);
 
-	if(equation==0)
-		{
-		affichage = SDL_SetVideoMode(LARGEUR/2, HAUTEUR/2, 32, SDL_SWSURFACE);
-		}
-	else
-		{
-		affichage = SDL_SetVideoMode(LARGEUR, HAUTEUR, 32, SDL_SWSURFACE);
-		}
+	affichage = SDL_SetVideoMode(LARGEUR, HAUTEUR, 32, SDL_SWSURFACE);
 
 	if (affichage == NULL)
 		{
@@ -67,33 +60,20 @@ void graphiqueInitialise(int equation, int fond)
 		}
 	else fprintf(stderr, "Mode graphique activé\n");
 
-	switch(equation) //MENU=0, PENDULE=1, HARMONIQUE=2, CORDE=3, DIOPTRE=4
-		{
-		case 0:
-			SDL_WM_SetCaption("Menu SiCP 1.0", NULL);
-			break;
-		case 1:
-			SDL_WM_SetCaption("Chaîne de pendules", NULL);
-			break;
-		case 2:
-			SDL_WM_SetCaption("Chaîne d'oscilateurs harmoniques", NULL);
-			break;
-		case 3:
-			SDL_WM_SetCaption("Corde vibrante", NULL);
-			break;
-		case 4:
-			SDL_WM_SetCaption("Corde vibrante asymétrique", NULL);
-			break;
-		default:
-			SDL_WM_SetCaption("SiCP 1.0", NULL);
-			break;
-		}
+	SDL_WM_SetCaption("SiCF", NULL);
 
 	Uint32 clrFond = SDL_MapRGB(affichage->format, fond, fond, fond);
 
 	SDL_FillRect(affichage, NULL, clrFond);
 
 	return;
+	}
+
+int graphiqueNettoyage(int couleurFond)
+	{
+	Uint32 couleurF=SDL_MapRGB(affichage->format,couleurFond,couleurFond,couleurFond);
+	SDL_FillRect(affichage, NULL, couleurF);
+	return 0;
 	}
 
 void graphiqueMiseAJour(void)
@@ -166,16 +146,17 @@ void graphiqueDisque(int X, int Y, int rayon, Uint32 couleur)
 int graphiqueDessineCorde(graphe * graph)
 	{
 	int i, x, y, X, Y;
-	Uint32 clrFond = SDL_MapRGB(affichage->format, (*graph).fond, (*graph).fond, (*graph).fond);
+	//Uint32 clrFond = SDL_MapRGB(affichage->format, (*graph).fond, (*graph).fond, (*graph).fond);
 	Uint32 couleur = SDL_MapRGB(affichage->format, (*graph).rouge, (*graph).bleu, (*graph).vert);
+	//Uint32 couleurNouveau = SDL_MapRGB(affichage->format, (*graph).rouge/2, (*graph).bleu/2, (*graph).vert/2);
 	for(i=1;i<N;i++)
 		{
-		X = (*graph).ancienAbscisse[i-1];
+	/*	X = (*graph).ancienAbscisse[i-1];
 		Y = (*graph).ancienOrdonnee[i-1];
 		x = (*graph).ancienAbscisse[i];
 		y = (*graph).ancienOrdonnee[i];
-		graphiqueLigneDroite(X, Y, x, y, clrFond);
-		graphiqueLigneDroite(X, Y+1, x, y+1, clrFond);
+		graphiqueLigneDroite(X, Y, x, y, couleurAncien);
+		graphiqueLigneDroite(X, Y+1, x, y+1, couleurAncien); */
 		X = (*graph).nouvelAbscisse[i-1];
 		Y = (*graph).nouvelOrdonnee[i-1];
 		x = (*graph).nouvelAbscisse[i];
@@ -183,27 +164,27 @@ int graphiqueDessineCorde(graphe * graph)
 		graphiqueLigneDroite(X, Y, x, y, couleur);
 		graphiqueLigneDroite(X, Y+1, x, y+1, couleur);
 		}
-	//SDL_UpdateRect(affichage, 0, 0, 0, 0);
+
 	return 0;
 	}
 
 int graphiqueDessineSpectre(graphe * spectr)
 	{
 	int i, x, y, X, Y;
-	Uint32 clrFond = SDL_MapRGB(affichage->format, (*spectr).fond, (*spectr).fond, (*spectr).fond);
+	//Uint32 clrFond = SDL_MapRGB(affichage->format, (*spectr).fond, (*spectr).fond, (*spectr).fond);
 	Uint32 couleur = SDL_MapRGB(affichage->format, (*spectr).vert, (*spectr).rouge, (*spectr).bleu);
 	for(i=0;i<N;i++)
 		{
 		X=(*spectr).fixeAbscisse[i];
 		Y=(*spectr).fixeOrdonnee[i];
-		x=(*spectr).ancienAbscisse[i];
+	/*	x=(*spectr).ancienAbscisse[i];
 		y=(*spectr).ancienOrdonnee[i];
-		graphiqueLigneDroite(X, Y, x, y, clrFond);
+		graphiqueLigneDroite(X, Y, x, y, clrFond); */
 		x=(*spectr).nouvelAbscisse[i];
 		y=(*spectr).nouvelOrdonnee[i];
 		graphiqueLigneDroite(X, Y, x, y, couleur);
 		}
-	//SDL_UpdateRect(affichage, 0, 0, 0, 0);
+
 	return 0;
 	}
 

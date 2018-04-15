@@ -1,7 +1,7 @@
 /*
-Copyright décembre 2016, Stephan Runigo
+Copyright avril 2018, Stephan Runigo
 runigo@free.fr
-SiCF 1.1  simulateur de chaîne de pendules
+SiCF 1.4  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -36,6 +36,6 @@ termes.
 #include "../controle/controleur.h"
 
 int donneesOptions(options * option);
-int donneesControleur(controleur * control);
+int donneesControleur(controleurT * controleur);
 
 #endif

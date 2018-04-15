@@ -1,7 +1,7 @@
 /*
-Copyright novembre 2017, Stephan Runigo
+Copyright avril 2018, Stephan Runigo
 runigo@free.fr
-SiCF 1.2  simulateur de corde vibrante et spectre
+SiCF 1.4  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -34,20 +34,20 @@ termes.
 
 int main(int nb, char *opt[])
 	{
-	controleur control;
+	controleurT controleur;
 
 	fprintf(stderr, "\nInitialisations des options\n");
-	if(donneesOptions(&control.option)==0)
+	if(donneesOptions(&controleur.option)==0)
 		{
 		fprintf(stderr, "Traitement des options de la ligne de commande\n");
-		optionsTraitement(&control.option, nb, opt);
+		optionsTraitement(&controleur.option, nb, opt);
 		}
 
 	fprintf(stderr, "Initialisations\n");
-	if(donneesControleur(&control)==0)
+	if(donneesControleur(&controleur)==0)
 		{
 		fprintf(stderr, "Simulation graphique du système, \n");
-		controleurSimulationGraphique(&control);
+		controleurSimulationGraphique(&controleur);
 		}
 	else
 		{
@@ -62,18 +62,3 @@ int main(int nb, char *opt[])
 	return 0;
 	}
 
-//////////////////////////////////////////////////////////////////
-/*
-SiCF 1.1
-		fprintf(stderr, "Simulation graphique du système, \n");
-		if(control.option.thread==1)
-			{
-			//fprintf(stderr, "deux threads\n");
-			processusSimulationGraphique(&control);
-			}
-		else
-			{
-			//fprintf(stderr, "processus unique\n");
-			controleurSimulationGraphique(&control);
-			}
-*/

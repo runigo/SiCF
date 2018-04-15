@@ -38,8 +38,8 @@ OBJDIR = ./obj
 
 all : $(EXEC)
 
-$(EXEC) : $(OBJDIR)/principale.o $(OBJDIR)/options.o $(OBJDIR)/processus.o $(OBJDIR)/donnees.o $(OBJDIR)/fichier.o $(OBJDIR)/controleur.o $(OBJDIR)/projection.o $(OBJDIR)/graphique.o $(OBJDIR)/graphe.o $(OBJDIR)/fourier.o $(OBJDIR)/observables.o $(OBJDIR)/change.o $(OBJDIR)/systeme.o $(OBJDIR)/moteurs.o $(OBJDIR)/pendule.o
-	$(CC) -g $(OBJDIR)/principale.o $(OBJDIR)/options.o $(OBJDIR)/processus.o $(OBJDIR)/donnees.o $(OBJDIR)/fichier.o $(OBJDIR)/controleur.o $(OBJDIR)/projection.o $(OBJDIR)/graphique.o $(OBJDIR)/graphe.o $(OBJDIR)/fourier.o $(OBJDIR)/observables.o $(OBJDIR)/change.o $(OBJDIR)/systeme.o $(OBJDIR)/moteurs.o $(OBJDIR)/pendule.o ` sdl-config --libs` $(LDFLAGS) -o $(EXEC)
+$(EXEC) : $(OBJDIR)/principale.o $(OBJDIR)/options.o $(OBJDIR)/donnees.o $(OBJDIR)/fichier.o $(OBJDIR)/controleur.o $(OBJDIR)/projection.o $(OBJDIR)/horloge.o $(OBJDIR)/graphique.o $(OBJDIR)/graphe.o $(OBJDIR)/fourier.o $(OBJDIR)/observables.o $(OBJDIR)/change.o $(OBJDIR)/systeme.o $(OBJDIR)/moteurs.o $(OBJDIR)/pendule.o
+	$(CC) -g $(OBJDIR)/principale.o $(OBJDIR)/options.o $(OBJDIR)/donnees.o $(OBJDIR)/fichier.o $(OBJDIR)/controleur.o $(OBJDIR)/projection.o $(OBJDIR)/horloge.o $(OBJDIR)/graphique.o $(OBJDIR)/graphe.o $(OBJDIR)/fourier.o $(OBJDIR)/observables.o $(OBJDIR)/change.o $(OBJDIR)/systeme.o $(OBJDIR)/moteurs.o $(OBJDIR)/pendule.o ` sdl-config --libs` $(LDFLAGS) -o $(EXEC)
 
 $(OBJDIR)/principale.o : controle/principale.c controle/principale.h
 	$(CC) -c -g controle/principale.c $(CFLAGS) -o $@
@@ -53,14 +53,14 @@ $(OBJDIR)/donnees.o : donnees/donnees.c donnees/donnees.h
 $(OBJDIR)/fichier.o : donnees/fichier.c donnees/fichier.h
 	$(CC) -c -g donnees/fichier.c $(CFLAGS) -o $@
 
-$(OBJDIR)/processus.o : controle/processus.c controle/processus.h
-	$(CC) -c -g controle/processus.c $(CFLAGS) -o $@
-
 $(OBJDIR)/controleur.o : controle/controleur.c controle/controleur.h
 	$(CC) -c -g controle/controleur.c $(CFLAGS) -o $@
 
 $(OBJDIR)/projection.o : projection/projection.c projection/projection.h
 	$(CC) -c -g projection/projection.c $(CFLAGS) -o $@
+
+$(OBJDIR)/horloge.o : graphisme/horloge.c graphisme/horloge.h
+	$(CC) -c -g graphisme/horloge.c $(CFLAGS) -o $@
 
 $(OBJDIR)/graphique.o : graphisme/graphique.c graphisme/graphique.h
 	$(CC) -c -g graphisme/graphique.c $(CFLAGS) -o $@
