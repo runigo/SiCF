@@ -1,7 +1,7 @@
 /*
-Copyright novembre 2017, Stephan Runigo
+Copyright avril 2018, Stephan Runigo
 runigo@free.fr
-SiCF 1.2  simulateur de corde vibrante et spectre
+SiCF 1.4  simulateur de corde vibrante et spectre
 Ce logiciel est un programme informatique servant à simuler l'équation
 d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 une représentation graphique de ces fonctions. 
@@ -39,7 +39,6 @@ void optionsDissipation(options * option, char *opt);
 void optionsEquation(options * option, char *opt);
 void optionsFond(options * option, char *opt);
 void optionsNombre(options * option, char *opt);
-void optionsThread(options * option, char *opt);
 void optionsPause(options * option, char *opt);
 void optionsSoliton(options * option, char *opt);
 void optionsMode(options * option, char *opt);
@@ -79,10 +78,7 @@ int optionsTraitement(options * option, int nb, char *opt[])
 
 		if(strcmp(opt[i], "dissipation")==0 && opt[i+1]!=NULL)
 			optionsDissipation(option, opt[i+1]);	// dissipation
-/*
-		if(strcmp(opt[i], "th")==0)
-			optionsThread(option, opt[i+1]);	// Deux threads
-*/
+
 		if(strcmp(opt[i], "aide")==0)
 			optionsAide();	// Affiche l'aide.
 		if(strcmp(opt[i], "help")==0)
@@ -248,7 +244,7 @@ void optionsPause(options * option, char *opt)
 	return;
 	}
 
-		// Mode  -1 : Wait, 1 : Poll
+		// Mode  pause évolution système
 void optionsMode(options * option, char *opt)
 	{
 	int mode = atoi(opt);
@@ -261,23 +257,6 @@ void optionsMode(options * option, char *opt)
 		{
 		printf("Option mode non valide, mode = %d\n", (*option).mode);
 		printf("Option mode : mode = +/- 1\n");
-		}
-	return;
-	}
-
-    	// Un processus ou deux threads
-void optionsThread(options * option, char *opt)
-	{
-	int thread = atoi(opt);
-	if(thread==1 || thread==0)
-		{
-		(*option).thread = thread;
-		printf("Option thread valide, thread = %d\n", (*option).thread);
-		}
-	else
-		{
-		printf("Option thread non valide, thread = %d\n", (*option).thread);
-		printf("Option thread : thread = 0 ou 1\n");
 		}
 	return;
 	}
@@ -296,7 +275,7 @@ void optionsAide(void)
 	printf(" equation	0 < equation < 5	choix de l'équation\n");
 	printf(" pause		5 < pause < 555		pause entre les affichages en ms\n");
 	printf(" duree		1 < duree < %d		nombre d'évolution du système entre les affichages\n", DUREE_MAX);
-	printf(" mode		= -1 ou 1		mode avec ou sans attente (Mode -1 : Wait, 1 : Poll)\n");
+	printf(" mode		= -1 ou 1		mode pause évolution système\n");
 	//printf("	flèches haut, bas, gauche, droite\n\n");
 
 	printf("\nCOMMANDE CLAVIER\n");

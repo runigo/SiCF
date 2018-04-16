@@ -36,52 +36,55 @@ termes.
 
 #include "horloge.h"
 
+/*
+	VARIABLES GLOBALES
+*/
+
+SDL_Event user_event;
+int *paramTimer;
+
+/*
+	...............
+*/
+
 Uint32 callTimer(Uint32 it, void *para);
 
 int horlogeCreation(horlogeT * horloge)
 	{
-		//fprintf(stderr, " Initialisation du timer, fond = %d\n", fond);
-		// définition d'un User Event
-	(*horloge).evenement.type=SDL_USEREVENT;
+		//fprintf(stderr, " Initialisation de l'horloge \n");
+
+	user_event.type=SDL_USEREVENT;
 
 		// Lancement du Timer principal
-	//(*horloge).horloge = SDL_AddTimer(TEMPS_AFFICHAGE, horlogeEvenement, horloge);
-	(*horloge).horloge = SDL_AddTimer(TEMPS_AFFICHAGE, callTimer, horloge);
+	(*horloge).horloge = SDL_AddTimer(TEMPS_AFFICHAGE, callTimer, &paramTimer);
 
-		//int *parametre;
-
-	(*horloge).date = 0;          // la référence de horloge du programme (nombre de période timer principal)
-	(*horloge).dateActuel = 0;          // 
-	(*horloge).datePrecedente = 0;         //
+	(*horloge).depart = 0;	// Date du départ du chronomètre
 
 	return 0;
 	}
 
 Uint32 callTimer(Uint32 it, void *para)
-{   // Callback du timer principal
-    // on créé un event pour passer le wait
-SDL_Event user_event;
-    // définition d'un User Event
-    user_event.type=SDL_USEREVENT;
-    SDL_PushEvent(&user_event);
+	{				// Callback du timer principal
+	SDL_PushEvent(&user_event);
 	(void) para;
-    return it;
-}
-
-/*
-Uint32 horlogeEvenement(Uint32 it, horlogeT * horloge)
-	{   // Rappel automatique du timer principal
-		// on crée un évenement pour passer le wait
-	SDL_PushEvent(&(*horloge).evenement);
-
 	return it;
 	}
-*/
+
 int horlogeSuppression(horlogeT * horloge)
 	{
-	SDL_RemoveTimer((*horloge).horloge);  // arret timer
-
+	SDL_RemoveTimer((*horloge).horloge);	// Suppression du timer
 	return 0;
+	}
+
+int horlogeChronoDepart(horlogeT * horloge)
+	{
+	(*horloge).depart = SDL_GetTicks();	// Départ du chronomètre
+	return 0;
+	}
+
+int horlogeChronoDuree(horlogeT * horloge)
+	{					// Durée chronométrée
+	return (int)(SDL_GetTicks() - (*horloge).depart);
 	}
 
 //////////////////////////////////////////////////////////////////////////////

@@ -105,8 +105,6 @@ int donneesOptions(options * option)
 
 	(*option).dissipation=0.0;	// Fréquence du générateur de signaux
 
-	(*option).thread=0;		// 0 : un processus, 1 : deux threads
-
 	return 0;
 	}
 

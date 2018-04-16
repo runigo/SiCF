@@ -1,7 +1,7 @@
 
-#Copyright janvier 2017, Stephan Runigo
+#Copyright avril 2018, Stephan Runigo
 #runigo@free.fr
-#SiCF 1.1.1  simulateur de corde vibrante et spectre
+#SiCF 1.4  simulateur de corde vibrante et spectre
 # Ce logiciel est un programme informatique servant à simuler l'équation
 # d'une corde vibrante, à calculer sa transformée de fourier, et à donner
 # une représentation graphique de ces fonctions. 
@@ -32,7 +32,8 @@
 CC=gcc
 EXEC=SiCF
 CFLAGS= -Wall -Wextra -Werror --std=c99
-LDFLAGS= -Wall -Wextra -Werror --std=c99 -lm -lpthread
+#LDFLAGS= -Wall -Wextra -Werror --std=c99 -lm -lpthread
+LDFLAGS= -Wall -Wextra -Werror --std=c99 -lm
 
 OBJDIR = ./obj
 

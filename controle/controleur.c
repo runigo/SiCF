@@ -86,15 +86,20 @@ int controleurActionClavier(controleurT * controleur)
 
 void controleurEvolution(controleurT * controleur)
 	{
+		//fprintf(stderr, "    Durée entre affichage = %d\n",horlogeChronoDuree(&(*controleur).horloge));
+	//horlogeChronoDepart(&(*controleur).horloge);
+
 		//fprintf(stderr, "Projection du système sur la représentation graphique\n");
 	controleurProjection(controleur);
 
-		//fprintf(stderr, "Projection du système sur la représentation graphique\n");
-	controleurEvolutionSysteme(controleur);
+		//fprintf(stderr, "Evolution temporelle du systeme et des spectres\n");
+	if((*controleur).option.mode > 0)
+		controleurEvolutionSysteme(controleur);
 
 		//fprintf(stderr, "Mise à jourde la fenêtre graphique et pause\n");
 	controleurConstructionGraphique(controleur);
 
+	//fprintf(stderr, "    Durée des évolutions = %d\n",horlogeChronoDuree(&(*controleur).horloge));
 
 	return;
 	}
@@ -113,14 +118,12 @@ int controleurProjection(controleurT * controleur)
 int controleurEvolutionSysteme(controleurT * controleur)
 	{
 		//fprintf(stderr, "Evolution temporelle du systeme\n");
-	systemeEvolution(&(*controleur).systeme, (*controleur).option.duree);
+		systemeEvolution(&(*controleur).systeme, (*controleur).option.duree);
 
-#ifndef SiCP
-	//  Calcul des spectres
+		//fprintf(stderr, "Calcul des spectres\n");
 	projectionSystemeFonction(&(*controleur).systeme, &(*controleur).spectreG, &(*controleur).spectreD);
 	fourierCalcule(&(*controleur).spectreG, 0, Ne);
 	fourierCalcule(&(*controleur).spectreD, 0, Ne);
-#endif
 
 	return 0;
 	}

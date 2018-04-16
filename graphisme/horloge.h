@@ -42,12 +42,8 @@ termes.
 typedef struct HorlogeT horlogeT;
 	struct HorlogeT
 		{
-		SDL_Event evenement;	// Evenement
-		SDL_TimerID horloge;          // timer principal
-		//int *parametre;
-		long int date;          // la référence de horloge du programme (nombre de période timer principal)
-		long int dateActuel;          // 
-		long int datePrecedente;         //
+		SDL_TimerID horloge;	// timer principal
+		long int depart;	// Départ du chronomètre
 		};
 
 Uint32 horlogeEvenement(Uint32 it, horlogeT * horloge);
@@ -55,5 +51,8 @@ Uint32 horlogeEvenement(Uint32 it, horlogeT * horloge);
 int horlogeCreation(horlogeT * horloge);
 int horlogeSuppression(horlogeT * horloge);
 void horlogeChangeSupport(horlogeT * horloge);
+
+int horlogeChronoDepart(horlogeT * horloge);
+int horlogeChronoDuree(horlogeT * horloge);
 
 #endif

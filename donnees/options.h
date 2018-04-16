@@ -41,9 +41,7 @@ typedef struct Options options;
 		{
 
 		int duree;	// nombre d'incrémentation du système par affichage
-		int mode;	// -1 : Wait, 1 : Poll
-
-		int thread;		// 0 : un processus, 1 : deux threads
+		int mode;	// Pause de l'évolution du système
 
 		int fond;		// couleur du fond de l'affichage
 
