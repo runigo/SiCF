@@ -6,7 +6,7 @@ Ce logiciel est régi par la licence CeCILL
 SiCF
 
 NOM
-		SiCP - Simulateur de corde vibrante et spectre de fréquence
+		SiCF - Simulateur de corde vibrante et spectre de fréquence
 
 SYNOPSIS
 		./SiCF [ OPTION VALEUR ]...
